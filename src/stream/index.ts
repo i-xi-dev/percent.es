@@ -1,77 +1,86 @@
 //
 
+import { 
+  ByteDecoderStreamRegulator,
+  ByteEncoderStreamRegulator,
+  ByteDecoderStream,
+  ByteEncoderStream,
+} from "../lib/@i-xi-dev/fundamental/index";
+
 import {
   // type Options,
   Options,
-  // type ResolvedOptions,
-  // ResolvedOptions,
-  // decode,
-  // encode,
-  // resolveOptions,
-} from "../_.js";
+} from "../_";
 
-// type DecoderStreamPending = {
-//   chars: string,
-// };
+import {
+  PercentDecoder,
+  PercentEncoder,
+} from "../index";
 
-class DecoderStream implements TransformStream {
-  /**
-   * 未設定項目を埋めたオプション
-   */
-  // readonly #options: ResolvedOptions;
+class PercentDecoderStreamRegulator implements ByteDecoderStreamRegulator {
+  #pending: string;
 
-  // readonly #pending: DecoderStreamPending;
-
-  readonly #stream: TransformStream<string, Uint8Array>;
-
-  constructor(options?: Options) {
-    void options;
-    throw new Error("not implemented");
+  constructor() {
+    this.#pending = "";
   }
 
-  get writable(): WritableStream<string> {
-    return this.#stream.writable;
+  regulate(chunk: string): string {
+
+
+
+
+
+    
+    //TODO
   }
 
-  get readable(): ReadableStream<Uint8Array> {
-    return this.#stream.readable;
+  flush(): string {
+    const remains = this.#pending;
+    this.#pending = "";
+    return remains;
   }
-
 }
-Object.freeze(DecoderStream);
 
-// type EncoderStreamPending = {
-//   bytes: Uint8Array,
-// };
-
-class EncoderStream implements TransformStream {
-  /**
-   * 未設定項目を埋めたオプション
-   */
-  // readonly #options: ResolvedOptions;
-
-  // readonly #pending: EncoderStreamPending;
-
-  readonly #stream: TransformStream<Uint8Array, string>;
-
+/**
+ * 復号ストリーム
+ */
+class DecoderStream extends ByteDecoderStream {
   /**
    * @param options オプション
    */
-  constructor(options?: Options) {
-    void options;
-    throw new Error("not implemented");
+   constructor(options?: Options) {
+    const decoder = new PercentDecoder(options);
+    const regulator = new PercentDecoderStreamRegulator();
+    super(decoder, regulator);
+    Object.freeze(this);
+  }
+}
+Object.freeze(DecoderStream);
+
+class PercentEncoderStreamRegulator implements ByteEncoderStreamRegulator {
+  regulate(chunk: Uint8Array): Uint8Array {
+    return chunk;
   }
 
-  get writable(): WritableStream<Uint8Array> {
-    return this.#stream.writable;
+  flush(): Uint8Array {
+    return new Uint8Array(0);
   }
-
-  get readable(): ReadableStream<string> {
-    return this.#stream.readable;
-  }
-
 }
 
+/**
+ * 符号化ストリーム
+ */
+class EncoderStream extends ByteEncoderStream {
+  /**
+   * @param options オプション
+   */
+   constructor(options?: Options) {
+    const encoder = new PercentEncoder(options);
+    const regulator = new PercentEncoderStreamRegulator();
+    super(encoder, regulator);
+    Object.freeze(this);
+  }
+}
 Object.freeze(EncoderStream);
 
 export {

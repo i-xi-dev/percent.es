@@ -1,6 +1,11 @@
 //
 
 import {
+  ByteDecoder,
+  ByteEncoder,
+} from "@i-xi-dev/fundamental";
+
+import {
   // type Options,
   Options,
   // type ResolvedOptions,
@@ -8,12 +13,12 @@ import {
   decode,
   encode,
   resolveOptions,
-} from "./_.js";
+} from "./_";
 
 /**
  * 復号器
  */
-class PercentDecoder {
+class PercentDecoder implements ByteDecoder {
   /**
    * 未設定項目を埋めたオプション
    */
@@ -42,7 +47,7 @@ Object.freeze(PercentDecoder);
 /**
  * 符号化器
  */
-class PercentEncoder {
+class PercentEncoder implements ByteEncoder {
   /**
    * 未設定項目を埋めたオプション
    */

@@ -1,7 +1,6 @@
 //
 
-/** （256個列挙するしかないので、定義していないが）0～255の整数を表すものとする */
-type uint8 = number; // type uint8 = 0 | 0x1 | … | 0xFE | 0xFF;
+import { uint8 } from "@i-xi-dev/fundamental";
 
 /**
  * オプション
@@ -51,11 +50,11 @@ function decode(encoded: string, options: ResolvedOptions): Uint8Array {
     if (c === "%") {
       const byteString = encoded.substring((i + 1), (i + 3));
       if (hexRegExp.test(byteString)) {
-        byte = Number.parseInt(byteString, 16);
+        byte = Number.parseInt(byteString, 16) as uint8;
         i = i + 3;
       }
       else {
-        byte = c.charCodeAt(0);
+        byte = c.charCodeAt(0) as uint8;
         i = i + 1;
       }
     }
@@ -69,7 +68,7 @@ function decode(encoded: string, options: ResolvedOptions): Uint8Array {
       i = i + 1;
     }
     else {
-      byte = c.charCodeAt(0);
+      byte = c.charCodeAt(0) as uint8;
       i = i + 1;
     }
 
@@ -126,7 +125,7 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
   let work: Array<uint8> = [];
   let encoded = "";
   for (const byte of toEncode) {
-    if (isByteIncludedInEncodeSet(byte, options.encodeSet)) {
+    if (isByteIncludedInEncodeSet(byte as uint8, options.encodeSet)) {
       if (byte === 0x20) {
         if (options.spaceAsPlus === true) {
           encoded = encoded + formatByte(Uint8Array.from(work)) + "+";
@@ -137,7 +136,7 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
         }
       }
       else {
-        work.push(byte);
+        work.push(byte as uint8);
       }
     }
     else {
@@ -261,7 +260,7 @@ const ALL: Readonly<Set<uint8>> = Object.freeze(new Set([
   0x7C,
   0x7D,
   0x7E,
-]));
+]) as Set<uint8>);
 
 /**
  * デフォルトオプション
