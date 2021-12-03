@@ -25,13 +25,20 @@ class PercentDecoderStreamRegulator implements ByteDecoderStreamRegulator {
   }
 
   regulate(chunk: string): string {
+    const temp = this.#pending + chunk;
 
-
-
-
-
-    
-    //TODO
+    // ・%を含んでいなければ何文字でもそのまま返す
+    // ・%を含んでいれば最後の%より前を返す
+    //   TODO %の後方がある程度長ければ返せるが
+    const lastPIndex = temp.lastIndexOf("%");
+    if (lastPIndex >= 0) {
+      this.#pending = temp.substring(lastPIndex);
+      return temp.substring(0, lastPIndex);
+    }
+    else {
+      this.#pending = "";
+      return temp;
+    }
   }
 
   flush(): string {
@@ -48,7 +55,7 @@ class DecoderStream extends ByteDecoderStream {
   /**
    * @param options オプション
    */
-   constructor(options?: Options) {
+  constructor(options?: Options) {
     const decoder = new PercentDecoder(options);
     const regulator = new PercentDecoderStreamRegulator();
     super(decoder, regulator);
@@ -74,7 +81,7 @@ class EncoderStream extends ByteEncoderStream {
   /**
    * @param options オプション
    */
-   constructor(options?: Options) {
+  constructor(options?: Options) {
     const encoder = new PercentEncoder(options);
     const regulator = new PercentEncoderStreamRegulator();
     super(encoder, regulator);

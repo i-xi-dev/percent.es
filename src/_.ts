@@ -151,11 +151,11 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
 
 /**
  * オプション
- * encodeSet以外は未設定を許可
+ * 未設定を許可
  */
 type Options = {
   /** @see {@link ResolvedOptions.encodeSet} */
-  encodeSet: Readonly<Array<uint8>>,
+  encodeSet?: Readonly<Array<uint8>>,
 
   /** @see {@link ResolvedOptions.spaceAsPlus} */
   spaceAsPlus?: boolean,
