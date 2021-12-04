@@ -1,4 +1,4 @@
-//
+// TODO bytesの中に戻す
 
 import { uint8 } from "@i-xi-dev/fundamental";
 
@@ -155,7 +155,7 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
  */
 type Options = {
   /** @see {@link ResolvedOptions.encodeSet} */
-  encodeSet?: Readonly<Array<uint8>>,
+  encodeSet?: Readonly<Set<uint8>>,
 
   /** @see {@link ResolvedOptions.spaceAsPlus} */
   spaceAsPlus?: boolean,

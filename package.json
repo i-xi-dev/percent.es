@@ -9,10 +9,6 @@
     ".": {
       "node": "./node/index.mjs",
       "default": "./dist/index.js"
-    },
-    "./stream": {
-      "node": "./node/stream/index.mjs",
-      "default": "./dist/stream/index.js"
     }
   },
   "scripts": {

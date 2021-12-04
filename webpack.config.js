@@ -4,7 +4,7 @@ export default {
   mode: "development",
   entry: {
     "/": "./src/index.ts",
-    "/stream/": "./src/stream/index.ts",
+    //"/stream/": "./src/stream/index.ts",
   },
   output: {
     filename: "[name]index.js",
