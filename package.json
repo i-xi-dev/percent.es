@@ -1,6 +1,6 @@
 {
   "name": "@i-xi-dev/percent",
-  "version": "0.0.1",
+  "version": "0.0.3",
   "description": "",
   "type": "module",
   "main": "./dist/index.js",
@@ -50,6 +50,6 @@
     "access": "public"
   },
   "dependencies": {
-    "@i-xi-dev/fundamental": "^0.0.2"
+    "@i-xi-dev/fundamental": "^0.0.5"
   }
 }
