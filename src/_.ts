@@ -30,7 +30,7 @@ type ResolvedOptions = {
 /**
  * 文字列をバイト列にパーセント復号し、結果のバイト列を返却
  * 
- * {@link https://url.spec.whatwg.org/#string-percent-decode URL Standard}の仕様に従った。
+ * {@link [URL Standard](https://url.spec.whatwg.org/#string-percent-decode)}の仕様に従った。
  * 
  * @param encoded パーセント符号化された文字列
  * @param options パーセント符号化の復号オプション
@@ -111,7 +111,7 @@ function formatByte(bytes: Uint8Array): string {
 /**
  * バイト列を文字列にパーセント符号化し、結果の文字列を返却
  * 
- * {@link https://url.spec.whatwg.org/ URL Standard}の仕様に従い、"%"に後続する16進数は大文字で固定。
+ * {@link [URL Standard](https://url.spec.whatwg.org/)}の仕様に従い、"%"に後続する16進数は大文字で固定。
  * 
  * デフォルトでは全バイトを"%XX"の形に符号化する。
  * URLエンコードとして使用するには、適切なoptions.encodeSetを設定すること。
