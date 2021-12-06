@@ -1,6 +1,9 @@
 // TODO bytesの中に戻す
 
-import { uint8 } from "@i-xi-dev/fundamental";
+import {
+  uint8,
+  Uint8,
+} from "@i-xi-dev/fundamental";
 
 /**
  * オプション
@@ -76,7 +79,7 @@ function decode(encoded: string, options: ResolvedOptions): Uint8Array {
   }
 
   if (decoded.length > j) {
-    return decoded.subarray(0, j);
+    return decoded.subarray(0, j);// TODO
   }
   return decoded;
 }
@@ -262,19 +265,10 @@ const ALL: Readonly<Set<uint8>> = Object.freeze(new Set([
   0x7E,
 ]) as Set<uint8>);
 
-/**
- * デフォルトオプション
- * 特に何らかの標準に準拠はしていない
- */
-const DefaultOptions: ResolvedOptions = Object.freeze({
-  encodeSet: ALL,
-  spaceAsPlus: false,
-});
-
 function isUint8Set(value: unknown): value is Set<uint8> {
   if (value instanceof Set) {
     const array = [ ...value ];
-    if (array.every((i) => Number.isSafeInteger(i) && (i >= 0) && (i <= 0xFF))) {
+    if (array.every((i) => Uint8.isUint8(i))) {
       return true;
     }
   }
@@ -288,10 +282,9 @@ function isUint8Set(value: unknown): value is Set<uint8> {
  * @param options オプション
  * @returns 未設定項目を埋めたオプションの複製
  */
-function resolveOptions(options: Options | ResolvedOptions = DefaultOptions): ResolvedOptions {
-  const defaults = DefaultOptions;
-  const encodeSet: Readonly<Set<uint8>> = isUint8Set(options.encodeSet) ? options.encodeSet : defaults.encodeSet;
-  const spaceAsPlus: boolean = (typeof options.spaceAsPlus === "boolean") ? options.spaceAsPlus : defaults.spaceAsPlus;
+function resolveOptions(options: Options | ResolvedOptions = {}): ResolvedOptions {
+  const encodeSet: Readonly<Set<uint8>> = isUint8Set(options.encodeSet) ? options.encodeSet : ALL;
+  const spaceAsPlus: boolean = (typeof options.spaceAsPlus === "boolean") ? options.spaceAsPlus : false;
   return {
     encodeSet,
     spaceAsPlus,
