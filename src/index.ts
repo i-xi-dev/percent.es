@@ -1,15 +1,13 @@
 //
 
 import {
-  ByteDecoder,
-  ByteEncoder,
+  type ByteDecoder,
+  type ByteEncoder,
 } from "@i-xi-dev/fundamental";
 
 import {
-  // type Options,
-  Options,
-  // type ResolvedOptions,
-  ResolvedOptions,
+  type Options,
+  type ResolvedOptions,
   decode,
   encode,
   resolveOptions,
@@ -73,11 +71,8 @@ class PercentEncoder implements ByteEncoder {
 }
 Object.freeze(PercentEncoder);
 
-export type {
-  Options as PercentOptions,
-};
-
 export {
+  type Options as PercentOptions,
   PercentDecoder,
   PercentEncoder,
 };

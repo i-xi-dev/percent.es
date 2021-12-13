@@ -1,7 +1,7 @@
 // TODO bytesの中に戻す
 
 import {
-  uint8,
+  type uint8,
   Uint8,
 } from "@i-xi-dev/fundamental";
 
@@ -291,12 +291,9 @@ function resolveOptions(options: Options | ResolvedOptions = {}): ResolvedOption
   };
 }
 
-export type {
-  Options,
-  ResolvedOptions,
-};
-
 export {
+  type Options,
+  type ResolvedOptions,
   decode,
   encode,
   resolveOptions,
