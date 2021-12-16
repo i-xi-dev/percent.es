@@ -79,7 +79,7 @@ function decode(encoded: string, options: ResolvedOptions): Uint8Array {
   }
 
   if (decoded.length > j) {
-    //return decoded.subarray(0, j);
+    // return decoded.subarray(0, j);
     return decoded.slice(0, j);
   }
   return decoded;
