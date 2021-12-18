@@ -71,8 +71,45 @@ class PercentEncoder implements ByteEncoder {
 }
 Object.freeze(PercentEncoder);
 
+const decoderCache: WeakMap<ResolvedOptions, PercentDecoder> = new WeakMap();
+
+const encoderCache: WeakMap<ResolvedOptions, PercentEncoder> = new WeakMap();
+
+const Percent = Object.freeze({
+  resolveOptions(options?: Options | ResolvedOptions): ResolvedOptions {
+    return resolveOptions(options);
+  },
+
+  getDecoder(options?: Options | ResolvedOptions): PercentDecoder {
+    const resolvedOptions = resolveOptions(options);
+    if (decoderCache.has(resolvedOptions) !== true) {
+      decoderCache.set(resolvedOptions, new PercentDecoder(resolvedOptions));
+    }
+    return decoderCache.get(resolvedOptions) as PercentDecoder;    
+  },
+
+  getEncoder(options?: Options | ResolvedOptions): PercentEncoder {
+    const resolvedOptions = resolveOptions(options);
+    if (encoderCache.has(resolvedOptions) !== true) {
+      encoderCache.set(resolvedOptions, new PercentEncoder(resolvedOptions));
+    }
+    return encoderCache.get(resolvedOptions) as PercentEncoder;
+  },
+
+  decode(encoded: string, options: Options | ResolvedOptions): Uint8Array {
+    const resolvedOptions = resolveOptions(options);
+    return decode(encoded, resolvedOptions);
+  },
+
+  encode(toEncode: Uint8Array, options: Options | ResolvedOptions): string {
+    const resolvedOptions = resolveOptions(options);
+    return encode(toEncode, resolvedOptions);
+  },
+});
+
 export {
   type Options as PercentOptions,
   PercentDecoder,
   PercentEncoder,
+  Percent,
 };
