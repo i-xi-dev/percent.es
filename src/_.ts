@@ -12,7 +12,7 @@ type ResolvedOptions = {
   /**
    * 0x00-0x1F,0x25,0x7F-0xFF以外に"%XX"への変換対象とするバイトのセット
    */
-  encodeSet: Readonly<Set<uint8>>,
+  encodeSet: Readonly<Array<uint8>>,
 
   /**
    * 復号時:
@@ -92,8 +92,8 @@ function decode(encoded: string, options: ResolvedOptions): Uint8Array {
  * @param encodeSet 0x00-0x1F,0x25,0x7F-0xFF以外に"%XX"への変換対象とするバイトのセット
  * @returns バイトが"%XX"の形にする対象か否か
  */
-function isByteIncludedInEncodeSet(byte: uint8, encodeSet: Readonly<Set<uint8>>): boolean {
-  return ((byte < 0x20) || (byte > 0x7E) || (byte === 0x25) || encodeSet.has(byte));
+function isByteIncludedInEncodeSet(byte: uint8, encodeSet: Readonly<Array<uint8>>): boolean {
+  return ((byte < 0x20) || (byte > 0x7E) || (byte === 0x25) || encodeSet.includes(byte));
 }
 
 /**
@@ -122,7 +122,7 @@ function formatByte(bytes: Uint8Array): string {
  * @returns パーセント符号化された文字列
  */
 function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
-  if ((options.spaceAsPlus === true) && (options.encodeSet.has(0x2B) !== true)) {
+  if ((options.spaceAsPlus === true) && (options.encodeSet.includes(0x2B) !== true)) {
     throw new TypeError("options.encodeSet, options.spaceAsPlus");
   }
 
@@ -159,7 +159,7 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
  */
 type Options = {
   /** @see {@link ResolvedOptions.encodeSet} */
-  encodeSet?: Readonly<Set<uint8>>,
+  encodeSet?: Readonly<Array<uint8>>,
 
   /** @see {@link ResolvedOptions.spaceAsPlus} */
   spaceAsPlus?: boolean,
@@ -168,7 +168,7 @@ type Options = {
 /**
  * 全バイトを"%XX"の形に符号化する用
  */
-const ALL: Readonly<Set<uint8>> = Object.freeze(new Set([
+const ALL: Readonly<Array<uint8>> = Object.freeze([
   0x20,
   0x21,
   0x22,
@@ -264,12 +264,11 @@ const ALL: Readonly<Set<uint8>> = Object.freeze(new Set([
   0x7C,
   0x7D,
   0x7E,
-]) as Set<uint8>);
+]);
 
-function isUint8Set(value: unknown): value is Set<uint8> {
-  if (value instanceof Set) {
-    const array = [ ...value ];
-    if (array.every((i) => Uint8.isUint8(i))) {
+function isArrayOfUint8(value: unknown): value is Array<uint8> {
+  if (Array.isArray(value)) {
+    if (value.every((i) => Uint8.isUint8(i))) {
       return true;
     }
   }
@@ -284,7 +283,7 @@ function isUint8Set(value: unknown): value is Set<uint8> {
  * @returns 未設定項目を埋めたオプションの複製
  */
 function resolveOptions(options: Options | ResolvedOptions = {}): ResolvedOptions {
-  const encodeSet: Readonly<Set<uint8>> = isUint8Set(options.encodeSet) ? options.encodeSet : ALL;
+  const encodeSet: Readonly<Array<uint8>> = isArrayOfUint8(options.encodeSet) ? options.encodeSet : ALL;
   const spaceAsPlus: boolean = (typeof options.spaceAsPlus === "boolean") ? options.spaceAsPlus : false;
   return {
     encodeSet,
