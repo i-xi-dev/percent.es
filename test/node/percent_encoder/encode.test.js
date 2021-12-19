@@ -50,8 +50,8 @@ describe("PercentEncoder.prototype.encode", () => {
 
   });
 
-  it("PercentEncoder({encodeSet:new Set()})/encode", () => {
-    const encoder = new PercentEncoder({encodeSet:new Set()});
+  it("PercentEncoder({encodeSet:[]})/encode", () => {
+    const encoder = new PercentEncoder({encodeSet:[]});
 
     assert.strictEqual(encoder.encode(Uint8Array.of()), "");
     assert.strictEqual(encoder.encode(Uint8Array.of(3,2,1,0,0xFF,0xFE,0xFD,0xFC)), "%03%02%01%00%FF%FE%FD%FC");
@@ -63,16 +63,16 @@ describe("PercentEncoder.prototype.encode", () => {
 
   });
 
-  it("PercentEncoder({encodeSet:new Set([...])})/encode", () => {
-    const encoder = new PercentEncoder({encodeSet:new Set([ 0x20, 0x22, 0x3C, 0x3E, 0x60 ])});
+  it("PercentEncoder({encodeSet:[...]})/encode", () => {
+    const encoder = new PercentEncoder({encodeSet:[ 0x20, 0x22, 0x3C, 0x3E, 0x60 ]});
 
     assert.strictEqual(encoder.encode(Uint8Array.of()), "");
     assert.strictEqual(encoder.encode(utf8Bytes1), "1%00%20!~%7F%E3%81%82+");
 
   });
 
-  it("PercentEncoder({encodeSet:new Set([...])})/encode", () => {
-    const encoder = new PercentEncoder({encodeSet:new Set([ 0x20, 0x22, 0x23, 0x24, 0x26, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D ])});
+  it("PercentEncoder({encodeSet:[...]})/encode", () => {
+    const encoder = new PercentEncoder({encodeSet:[ 0x20, 0x22, 0x23, 0x24, 0x26, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D ]});
 
     assert.strictEqual(encoder.encode(Uint8Array.of()), "");
     assert.strictEqual(encoder.encode(utf8Bytes1), "1%00%20!~%7F%E3%81%82%2B");
@@ -103,8 +103,8 @@ describe("PercentEncoder.prototype.encode", () => {
 
   });
 
-  it("PercentEncoder({encodeSet:new Set([...]),spaceAsPlus:true})/encode", () => {
-    const encoder = new PercentEncoder({encodeSet:new Set([ 0x20, 0x21, 0x22, 0x23, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D, 0x7E ]),spaceAsPlus:true});
+  it("PercentEncoder({encodeSet:[...],spaceAsPlus:true})/encode", () => {
+    const encoder = new PercentEncoder({encodeSet:[ 0x20, 0x21, 0x22, 0x23, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D, 0x7E ],spaceAsPlus:true});
 
     assert.strictEqual(encoder.encode(Uint8Array.of()), "");
     assert.strictEqual(encoder.encode(utf8Bytes1), "1%00+%21%7E%7F%E3%81%82%2B");
@@ -122,8 +122,8 @@ describe("PercentEncoder.prototype.encode", () => {
 
   });
 
-  it("PercentEncoder({encodeSet:new Set(),spaceAsPlus:true})/encode", () => {
-    const encoder = new PercentEncoder({encodeSet:new Set(),spaceAsPlus:true});
+  it("PercentEncoder({encodeSet:[],spaceAsPlus:true})/encode", () => {
+    const encoder = new PercentEncoder({encodeSet:[],spaceAsPlus:true});
 
     assert.throws(() => {
       encoder.encode(Uint8Array.of());
