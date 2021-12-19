@@ -123,9 +123,9 @@ describe("PercentEncoder.prototype.encode", () => {
   });
 
   it("PercentEncoder({encodeSet:[],spaceAsPlus:true})/encode", () => {
-    const encoder = new PercentEncoder({encodeSet:[],spaceAsPlus:true});
 
     assert.throws(() => {
+      const encoder = new PercentEncoder({encodeSet:[],spaceAsPlus:true});
       encoder.encode(Uint8Array.of());
     }, {
       message: "options.encodeSet, options.spaceAsPlus"

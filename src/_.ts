@@ -122,10 +122,6 @@ function formatByte(bytes: Uint8Array): string {
  * @returns パーセント符号化された文字列
  */
 function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
-  if ((options.spaceAsPlus === true) && (options.encodeSet.includes(0x2B) !== true)) {
-    throw new TypeError("options.encodeSet, options.spaceAsPlus");
-  }
-
   let work: Array<uint8> = [];
   let encoded = "";
   for (const byte of toEncode) {
@@ -283,12 +279,26 @@ function isArrayOfUint8(value: unknown): value is Array<uint8> {
  * @returns 未設定項目を埋めたオプションの複製
  */
 function resolveOptions(options: Options | ResolvedOptions = {}): ResolvedOptions {
-  const encodeSet: Readonly<Array<uint8>> = isArrayOfUint8(options.encodeSet) ? options.encodeSet : ALL;
-  const spaceAsPlus: boolean = (typeof options.spaceAsPlus === "boolean") ? options.spaceAsPlus : false;
-  return {
-    encodeSet,
+  const encodeSetIsValid = isArrayOfUint8(options.encodeSet);
+  const encodeSetIsFrozen = Object.isFrozen(options.encodeSet);
+  const spaceAsPlusIsValid = (typeof options.spaceAsPlus === "boolean");
+  const isFrozen = Object.isFrozen(options);
+
+  const encodeSet: Readonly<Array<uint8>> = encodeSetIsValid ? options.encodeSet as Array<uint8> : ALL;
+  const spaceAsPlus: boolean = spaceAsPlusIsValid ? options.spaceAsPlus as boolean : false;
+
+  if ((spaceAsPlus === true) && (encodeSet.includes(0x2B) !== true)) {
+    throw new TypeError("options.encodeSet, options.spaceAsPlus");
+  }
+
+  if (encodeSetIsValid && encodeSetIsFrozen && spaceAsPlusIsValid && isFrozen) {
+    return options as ResolvedOptions;
+  }
+
+  return Object.freeze({
+    encodeSet: Object.freeze(encodeSet),
     spaceAsPlus,
-  };
+  });
 }
 
 export {
