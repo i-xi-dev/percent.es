@@ -155,7 +155,7 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
  */
 type Options = {
   /** @see {@link ResolvedOptions.encodeSet} */
-  encodeSet?: Readonly<Array<uint8>>,
+  encodeSet?: Readonly<Array<number>>,
 
   /** @see {@link ResolvedOptions.spaceAsPlus} */
   spaceAsPlus?: boolean,
