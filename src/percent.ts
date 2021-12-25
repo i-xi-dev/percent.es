@@ -301,10 +301,25 @@ function resolveOptions(options: Options | ResolvedOptions = {}): ResolvedOption
   });
 }
 
+const Percent = Object.freeze({
+  decode(encoded: string, options?: Options): Uint8Array {
+    const resolvedOptions = resolveOptions(options);
+    return decode(encoded, resolvedOptions);
+  },
+
+  encode(toEncode: Uint8Array, options?: Options): string {
+    const resolvedOptions = resolveOptions(options);
+    return encode(toEncode, resolvedOptions);
+  },
+
+  resolveOptions,
+});
+
 export {
   type Options,
   type ResolvedOptions,
   decode,
   encode,
   resolveOptions,
+  Percent,
 };

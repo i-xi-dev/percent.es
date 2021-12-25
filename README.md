@@ -1,3 +1,3 @@
 # @i-xi-dev/percent
 
-test
+This is not for direct usage.
