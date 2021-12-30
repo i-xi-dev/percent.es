@@ -1,7 +1,6 @@
 import assert from "node:assert";
 import { URLSearchParams } from "node:url";
-import { PercentEncoder } from "./encoder";
-import { Percent } from "./percent";
+import { PercentEncoder, Percent } from "../../node/index.mjs";
 
 const utf8 = new TextEncoder();
 const utf8Bytes1 = utf8.encode("1\u{0} !~\u{7F}あ+");
