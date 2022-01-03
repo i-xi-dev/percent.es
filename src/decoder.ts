@@ -2,8 +2,8 @@
 
 import {
   type ByteDecoder,
+  SizedMap,
 } from "@i-xi-dev/fundamental";
-
 import {
   type PercentOptions,
   type ResolvedOptions,
@@ -12,10 +12,14 @@ import {
 } from "./percent";
 
 /**
- * 復号器
+ * Percent decoder
  */
 class PercentDecoder implements ByteDecoder {
-  static #decoderCache: WeakMap<ResolvedOptions, PercentDecoder> = new WeakMap();
+  /**
+   * インスタンスのキャッシュ
+   * static getで使用
+   */
+  static #pool: SizedMap<string, PercentDecoder> = new SizedMap(2);
 
   /**
    * 未設定項目を埋めたオプション
@@ -23,7 +27,7 @@ class PercentDecoder implements ByteDecoder {
   #options: ResolvedOptions;
 
   /**
-   * @param options オプション
+   * @param options - The `PercentOptions` dictionary.
    */
   constructor(options?: PercentOptions) {
     this.#options = resolveOptions(options);
@@ -31,10 +35,10 @@ class PercentDecoder implements ByteDecoder {
   }
 
   /**
-   * 文字列をバイト列にパーセント復号し、結果のバイト列を返却
+   * Decodes a Percent-encoded string into an `Uint8Array`.
    * 
-   * @param encoded パーセント符号化された文字列
-   * @returns バイト列
+   * @param encoded - The string to decode.
+   * @returns An `Uint8Array` containing the decoded bytes.
    */
   decode(encoded: string): Uint8Array {
     return decode(encoded, this.#options);
@@ -42,10 +46,15 @@ class PercentDecoder implements ByteDecoder {
 
   static get(options?: PercentOptions): PercentDecoder {
     const resolvedOptions = resolveOptions(options);
-    if (PercentDecoder.#decoderCache.has(resolvedOptions) !== true) {
-      PercentDecoder.#decoderCache.set(resolvedOptions, new PercentDecoder(resolvedOptions));
+
+    const poolKey = JSON.stringify(resolvedOptions);
+    let decoder = PercentDecoder.#pool.get(poolKey);
+    if (decoder) {
+      return decoder;
     }
-    return PercentDecoder.#decoderCache.get(resolvedOptions) as PercentDecoder;
+    decoder = new PercentDecoder(resolvedOptions);
+    PercentDecoder.#pool.set(poolKey, decoder);
+    return decoder;
   }
 }
 Object.freeze(PercentDecoder);

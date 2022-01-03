@@ -2,8 +2,8 @@
 
 import {
   type ByteEncoder,
+  SizedMap,
 } from "@i-xi-dev/fundamental";
-
 import {
   type PercentOptions,
   type ResolvedOptions,
@@ -12,10 +12,14 @@ import {
 } from "./percent";
 
 /**
- * 符号化器
+ * Percent encoder
  */
 class PercentEncoder implements ByteEncoder {
-  static #encoderCache: WeakMap<ResolvedOptions, PercentEncoder> = new WeakMap();
+  /**
+   * インスタンスのキャッシュ
+   * static getで使用
+   */
+  static #pool: SizedMap<string, PercentEncoder> = new SizedMap(2);
 
   /**
    * 未設定項目を埋めたオプション
@@ -23,7 +27,7 @@ class PercentEncoder implements ByteEncoder {
   #options: ResolvedOptions;
 
   /**
-   * @param options オプション
+   * @param options - The `PercentOptions` dictionary.
    */
   constructor(options?: PercentOptions) {
     this.#options = resolveOptions(options);
@@ -31,10 +35,10 @@ class PercentEncoder implements ByteEncoder {
   }
 
   /**
-   * バイト列を文字列にパーセント符号化し、結果の文字列を返却
+   * Encodes the specified bytes into a string.
    * 
-   * @param toEncode バイト列
-   * @returns パーセント符号化された文字列
+   * @param toEncode - The bytes to encode.
+   * @returns A string containing the Percent-encoded characters.
    */
   encode(toEncode: Uint8Array): string {
     return encode(toEncode, this.#options);
@@ -42,10 +46,15 @@ class PercentEncoder implements ByteEncoder {
 
   static get(options?: PercentOptions): PercentEncoder {
     const resolvedOptions = resolveOptions(options);
-    if (PercentEncoder.#encoderCache.has(resolvedOptions) !== true) {
-      PercentEncoder.#encoderCache.set(resolvedOptions, new PercentEncoder(resolvedOptions));
+
+    const poolKey = JSON.stringify(resolvedOptions);
+    let encoder = PercentEncoder.#pool.get(poolKey);
+    if (encoder) {
+      return encoder;
     }
-    return PercentEncoder.#encoderCache.get(resolvedOptions) as PercentEncoder;
+    encoder = new PercentEncoder(resolvedOptions);
+    PercentEncoder.#pool.set(poolKey, encoder);
+    return encoder;
   }
 }
 Object.freeze(PercentEncoder);

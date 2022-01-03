@@ -1,4 +1,4 @@
-// TODO bytesの中に戻す
+// 
 
 import {
   type uint8,
@@ -6,7 +6,32 @@ import {
 } from "@i-xi-dev/fundamental";
 
 /**
- * オプション
+ * The object with the following optional fields.
+ */
+type PercentOptions = {
+  /**
+   * The byte set to be encoded except 0x00-0x1F, 0x25, 0x7F-0xFF.
+   * The default is 0x20-0x24, 0x26-0x7E.
+   * 
+   * The following restrictions apply:
+   * - The `encodeSet` must not contain duplicate bytes.
+   */
+  encodeSet?: Readonly<Array<number>>,
+
+  /**
+   * Whether to output 0x20 as `"+"`.
+   * The default is `false`.
+   * 
+   * 
+   * 
+   * The following restrictions apply:
+   * - If `true`, `encodeSet` must contain `0x2B`.
+   */
+  spaceAsPlus?: boolean,
+};
+
+/**
+ * 未設定項目の存在しないオプション
  */
 type ResolvedOptions = {
   /**
@@ -150,18 +175,6 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
 }
 
 /**
- * オプション
- * 未設定を許可
- */
-type PercentOptions = {
-  /** @see {@link ResolvedOptions.encodeSet} */
-  encodeSet?: Readonly<Array<number>>,
-
-  /** @see {@link ResolvedOptions.spaceAsPlus} */
-  spaceAsPlus?: boolean,
-};
-
-/**
  * 全バイトを"%XX"の形に符号化する用
  */
 const ALL: Readonly<Array<uint8>> = Object.freeze([
@@ -279,26 +292,36 @@ function isArrayOfUint8(value: unknown): value is Array<uint8> {
  * @returns 未設定項目を埋めたオプションの複製
  */
 function resolveOptions(options: PercentOptions | ResolvedOptions = {}): ResolvedOptions {
-  const encodeSetIsValid = isArrayOfUint8(options.encodeSet);
-  const encodeSetIsFrozen = Object.isFrozen(options.encodeSet);
-  const spaceAsPlusIsValid = (typeof options.spaceAsPlus === "boolean");
-  const isFrozen = Object.isFrozen(options);
+  let encodeSet: Readonly<Array<uint8>>;
+  if (isArrayOfUint8(options.encodeSet)) {
+    encodeSet = Object.freeze([ ...options.encodeSet ]);
+  }
+  else {
+    encodeSet = ALL;
+  }
 
-  const encodeSet: Readonly<Array<uint8>> = encodeSetIsValid ? options.encodeSet as Array<uint8> : ALL;
-  const spaceAsPlus: boolean = spaceAsPlusIsValid ? options.spaceAsPlus as boolean : false;
+  let spaceAsPlus: boolean;
+  if (typeof options.spaceAsPlus === "boolean") {
+    spaceAsPlus = options.spaceAsPlus;
+  }
+  else {
+    spaceAsPlus = false;
+  }
 
   if ((spaceAsPlus === true) && (encodeSet.includes(0x2B) !== true)) {
     throw new TypeError("options.encodeSet, options.spaceAsPlus");
   }
 
-  if (encodeSetIsValid && encodeSetIsFrozen && spaceAsPlusIsValid && isFrozen) {
-    return options as ResolvedOptions;
-  }
-
   return Object.freeze({
-    encodeSet: Object.freeze(encodeSet),
+    encodeSet,
     spaceAsPlus,
   });
+}
+
+interface Percent {
+  decode(encoded: string, options?: PercentOptions): Uint8Array;
+
+  encode(toEncode: Uint8Array, options?: PercentOptions): string;
 }
 
 const Percent = Object.freeze({
@@ -311,9 +334,7 @@ const Percent = Object.freeze({
     const resolvedOptions = resolveOptions(options);
     return encode(toEncode, resolvedOptions);
   },
-
-  resolveOptions,
-});
+}) as Percent;
 
 export {
   type PercentOptions,

@@ -165,13 +165,12 @@ describe("PercentDecoder.get", () => {
   });
 
   it("get(Object)", () => {
-    const decoder1 = PercentDecoder.get({spaceAsPlus:false});
+    const decoder1 = PercentDecoder.get({spaceAsPlus:true});
     const decoder2 = PercentDecoder.get({spaceAsPlus:false});
     assert.notStrictEqual(decoder1, decoder2);
 
-    const op = Percent.resolveOptions({spaceAsPlus:false});
-    const decoder21 = PercentDecoder.get(op);
-    const decoder22 = PercentDecoder.get(op);
+    const decoder21 = PercentDecoder.get({spaceAsPlus:false});
+    const decoder22 = PercentDecoder.get({spaceAsPlus:false});
     assert.strictEqual(decoder21, decoder22);
 
   });

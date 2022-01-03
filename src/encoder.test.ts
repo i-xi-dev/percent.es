@@ -147,13 +147,12 @@ describe("PercentEncoder.get", () => {
   });
 
   it("get(Object)", () => {
-    const encoder1 = PercentEncoder.get({spaceAsPlus:false});
+    const encoder1 = PercentEncoder.get({spaceAsPlus:true});
     const encoder2 = PercentEncoder.get({spaceAsPlus:false});
     assert.notStrictEqual(encoder1, encoder2);
 
-    const op = Percent.resolveOptions({spaceAsPlus:false});
-    const encoder21 = PercentEncoder.get(op);
-    const encoder22 = PercentEncoder.get(op);
+    const encoder21 = PercentEncoder.get({spaceAsPlus:false});
+    const encoder22 = PercentEncoder.get({spaceAsPlus:false});
     assert.strictEqual(encoder21, encoder22);
 
   });
