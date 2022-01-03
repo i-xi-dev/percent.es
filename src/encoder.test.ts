@@ -129,7 +129,7 @@ describe("PercentEncoder.prototype.encode", () => {
       const encoder = new PercentEncoder({encodeSet:[],spaceAsPlus:true});
       encoder.encode(Uint8Array.of());
     }, {
-      name: "TypeError",
+      name: "RangeError",
       message: "options.encodeSet, options.spaceAsPlus"
     });
 

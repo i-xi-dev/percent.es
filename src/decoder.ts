@@ -28,6 +28,7 @@ class PercentDecoder implements ByteDecoder {
 
   /**
    * @param options - The `PercentOptions` dictionary.
+   * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
    */
   constructor(options?: PercentOptions) {
     this.#options = resolveOptions(options);
@@ -39,11 +40,18 @@ class PercentDecoder implements ByteDecoder {
    * 
    * @param encoded - The string to decode.
    * @returns An `Uint8Array` containing the decoded bytes.
+   * @throws {TypeError} The `encoded` is not Percent-encoded string.
    */
   decode(encoded: string): Uint8Array {
     return decode(encoded, this.#options);
   }
 
+  /**
+   * 
+   * @param options 
+   * @returns 
+   * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
+   */
   static get(options?: PercentOptions): PercentDecoder {
     const resolvedOptions = resolveOptions(options);
 

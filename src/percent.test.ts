@@ -267,7 +267,7 @@ describe("Percent.encode", () => {
     assert.throws(() => {
       Percent.encode(Uint8Array.of(), op);
     }, {
-      name: "TypeError",
+      name: "RangeError",
       message: "options.encodeSet, options.spaceAsPlus"
     });
 

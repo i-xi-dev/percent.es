@@ -60,6 +60,7 @@ type ResolvedOptions = {
  * @param encoded パーセント符号化された文字列
  * @param options パーセント符号化の復号オプション
  * @returns バイト列
+ * @throws {TypeError} The `encoded` is not Percent-encoded string.
  */
 function decode(encoded: string, options: ResolvedOptions): Uint8Array {
   if (/^[\u0020-\u007E]*$/.test(encoded) !== true) {
@@ -277,9 +278,7 @@ const ALL: Readonly<Array<uint8>> = Object.freeze([
 
 function isArrayOfUint8(value: unknown): value is Array<uint8> {
   if (Array.isArray(value)) {
-    if (value.every((i) => Uint8.isUint8(i))) {
-      return true;
-    }
+    return value.every((i) => Uint8.isUint8(i));
   }
   return false;
 }
@@ -290,6 +289,7 @@ function isArrayOfUint8(value: unknown): value is Array<uint8> {
  * 
  * @param options オプション
  * @returns 未設定項目を埋めたオプションの複製
+ * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
  */
 function resolveOptions(options: PercentOptions | ResolvedOptions = {}): ResolvedOptions {
   let encodeSet: Readonly<Array<uint8>>;
@@ -309,7 +309,7 @@ function resolveOptions(options: PercentOptions | ResolvedOptions = {}): Resolve
   }
 
   if ((spaceAsPlus === true) && (encodeSet.includes(0x2B) !== true)) {
-    throw new TypeError("options.encodeSet, options.spaceAsPlus");
+    throw new RangeError("options.encodeSet, options.spaceAsPlus");
   }
 
   return Object.freeze({
@@ -319,8 +319,24 @@ function resolveOptions(options: PercentOptions | ResolvedOptions = {}): Resolve
 }
 
 interface Percent {
+  /**
+   * 
+   * 
+   * @param encoded 
+   * @param options 
+   * @returns
+   * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
+   * @throws {TypeError} The `encoded` is not Percent-encoded string.
+   */
   decode(encoded: string, options?: PercentOptions): Uint8Array;
 
+  /**
+   * 
+   * @param toEncode 
+   * @param options 
+   * @returns
+   * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
+   */
   encode(toEncode: Uint8Array, options?: PercentOptions): string;
 }
 

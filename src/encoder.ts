@@ -28,6 +28,7 @@ class PercentEncoder implements ByteEncoder {
 
   /**
    * @param options - The `PercentOptions` dictionary.
+   * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
    */
   constructor(options?: PercentOptions) {
     this.#options = resolveOptions(options);
@@ -44,6 +45,12 @@ class PercentEncoder implements ByteEncoder {
     return encode(toEncode, this.#options);
   }
 
+  /**
+   * 
+   * @param options 
+   * @returns 
+   * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
+   */
   static get(options?: PercentOptions): PercentEncoder {
     const resolvedOptions = resolveOptions(options);
 
