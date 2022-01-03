@@ -1,7 +1,7 @@
 //
 
 export {
-  type Options as PercentOptions,
+  type PercentOptions,
   Percent,
 } from "./percent";
 

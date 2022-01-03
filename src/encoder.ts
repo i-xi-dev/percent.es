@@ -5,7 +5,7 @@ import {
 } from "@i-xi-dev/fundamental";
 
 import {
-  type Options,
+  type PercentOptions,
   type ResolvedOptions,
   encode,
   resolveOptions,
@@ -25,7 +25,7 @@ class PercentEncoder implements ByteEncoder {
   /**
    * @param options オプション
    */
-  constructor(options?: Options) {
+  constructor(options?: PercentOptions) {
     this.#options = resolveOptions(options);
     Object.freeze(this);
   }
@@ -40,7 +40,7 @@ class PercentEncoder implements ByteEncoder {
     return encode(toEncode, this.#options);
   }
 
-  static get(options?: Options): PercentEncoder {
+  static get(options?: PercentOptions): PercentEncoder {
     const resolvedOptions = resolveOptions(options);
     if (PercentEncoder.#encoderCache.has(resolvedOptions) !== true) {
       PercentEncoder.#encoderCache.set(resolvedOptions, new PercentEncoder(resolvedOptions));

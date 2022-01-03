@@ -8,8 +8,7 @@
 // } from "../lib/@i-xi-dev/fundamental/index";
 
 // import {
-//   // type Options,
-//   Options,
+//   type PercentOptions,
 // } from "../_";
 
 // import {
@@ -54,7 +53,7 @@
 //   /**
 //    * @param options オプション
 //    */
-//   constructor(options?: Options) {
+//   constructor(options?: PercentOptions) {
 //     const decoder = new PercentDecoder(options);
 //     const regulator = new PercentDecoderStreamRegulator();
 //     super(decoder, regulator);
@@ -80,7 +79,7 @@
 //   /**
 //    * @param options オプション
 //    */
-//   constructor(options?: Options) {
+//   constructor(options?: PercentOptions) {
 //     const encoder = new PercentEncoder(options);
 //     const regulator = new PercentEncoderStreamRegulator();
 //     super(encoder, regulator);

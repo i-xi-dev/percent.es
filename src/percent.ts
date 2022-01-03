@@ -153,7 +153,7 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
  * オプション
  * 未設定を許可
  */
-type Options = {
+type PercentOptions = {
   /** @see {@link ResolvedOptions.encodeSet} */
   encodeSet?: Readonly<Array<number>>,
 
@@ -278,7 +278,7 @@ function isArrayOfUint8(value: unknown): value is Array<uint8> {
  * @param options オプション
  * @returns 未設定項目を埋めたオプションの複製
  */
-function resolveOptions(options: Options | ResolvedOptions = {}): ResolvedOptions {
+function resolveOptions(options: PercentOptions | ResolvedOptions = {}): ResolvedOptions {
   const encodeSetIsValid = isArrayOfUint8(options.encodeSet);
   const encodeSetIsFrozen = Object.isFrozen(options.encodeSet);
   const spaceAsPlusIsValid = (typeof options.spaceAsPlus === "boolean");
@@ -302,12 +302,12 @@ function resolveOptions(options: Options | ResolvedOptions = {}): ResolvedOption
 }
 
 const Percent = Object.freeze({
-  decode(encoded: string, options?: Options): Uint8Array {
+  decode(encoded: string, options?: PercentOptions): Uint8Array {
     const resolvedOptions = resolveOptions(options);
     return decode(encoded, resolvedOptions);
   },
 
-  encode(toEncode: Uint8Array, options?: Options): string {
+  encode(toEncode: Uint8Array, options?: PercentOptions): string {
     const resolvedOptions = resolveOptions(options);
     return encode(toEncode, resolvedOptions);
   },
@@ -316,7 +316,7 @@ const Percent = Object.freeze({
 });
 
 export {
-  type Options,
+  type PercentOptions,
   type ResolvedOptions,
   decode,
   encode,

@@ -5,7 +5,7 @@ import {
 } from "@i-xi-dev/fundamental";
 
 import {
-  type Options,
+  type PercentOptions,
   type ResolvedOptions,
   decode,
   resolveOptions,
@@ -25,7 +25,7 @@ class PercentDecoder implements ByteDecoder {
   /**
    * @param options オプション
    */
-  constructor(options?: Options) {
+  constructor(options?: PercentOptions) {
     this.#options = resolveOptions(options);
     Object.freeze(this);
   }
@@ -40,7 +40,7 @@ class PercentDecoder implements ByteDecoder {
     return decode(encoded, this.#options);
   }
 
-  static get(options?: Options): PercentDecoder {
+  static get(options?: PercentOptions): PercentDecoder {
     const resolvedOptions = resolveOptions(options);
     if (PercentDecoder.#decoderCache.has(resolvedOptions) !== true) {
       PercentDecoder.#decoderCache.set(resolvedOptions, new PercentDecoder(resolvedOptions));
