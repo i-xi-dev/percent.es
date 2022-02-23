@@ -1,5 +1,5 @@
 import { expect } from '@esm-bundle/chai';
-import { Percent } from "../../node/index.mjs";
+import { Percent } from "../../dist/index.js";
 
 const utf8 = new TextEncoder();
 const utf8Bytes1 = utf8.encode("1\u{0} !~\u{7F}あ+");
