@@ -1,7 +1,5 @@
-import assert from "node:assert";
-import { URLSearchParams } from "node:url";
+import { expect } from '@esm-bundle/chai';
 import { PercentEncoder } from "./encoder";
-import { Percent } from "./percent";
 
 const utf8 = new TextEncoder();
 const utf8Bytes1 = utf8.encode("1\u{0} !~\u{7F}あ+");
@@ -41,46 +39,46 @@ describe("PercentEncoder.prototype.encode", () => {
   it("PercentEncoder()/encode", () => {
     const encoder = new PercentEncoder();
 
-    assert.strictEqual(encoder.encode(Uint8Array.of()), "");
-    assert.strictEqual(encoder.encode(Uint8Array.of(3,2,1,0,0xFF,0xFE,0xFD,0xFC)), "%03%02%01%00%FF%FE%FD%FC");
-    assert.strictEqual(encoder.encode(utf8Bytes1), "%31%00%20%21%7E%7F%E3%81%82%2B");
-    assert.strictEqual(encoder.encode(Uint8Array.of(255)), "%FF");
-    assert.strictEqual(encoder.encode(Uint8Array.of(0)), "%00");
-    assert.strictEqual(encoder.encode(Uint8Array.of(0,32,65)), "%00%20%41");
-    assert.strictEqual(encoder.encode(Uint8Array.of(255)), "%FF");
+    expect(encoder.encode(Uint8Array.of())).to.equal("");
+    expect(encoder.encode(Uint8Array.of(3,2,1,0,0xFF,0xFE,0xFD,0xFC))).to.equal("%03%02%01%00%FF%FE%FD%FC");
+    expect(encoder.encode(utf8Bytes1)).to.equal("%31%00%20%21%7E%7F%E3%81%82%2B");
+    expect(encoder.encode(Uint8Array.of(255))).to.equal("%FF");
+    expect(encoder.encode(Uint8Array.of(0))).to.equal("%00");
+    expect(encoder.encode(Uint8Array.of(0,32,65))).to.equal("%00%20%41");
+    expect(encoder.encode(Uint8Array.of(255))).to.equal("%FF");
 
   });
 
   it("PercentEncoder({encodeSet:[]})/encode", () => {
     const encoder = new PercentEncoder({encodeSet:[]});
 
-    assert.strictEqual(encoder.encode(Uint8Array.of()), "");
-    assert.strictEqual(encoder.encode(Uint8Array.of(3,2,1,0,0xFF,0xFE,0xFD,0xFC)), "%03%02%01%00%FF%FE%FD%FC");
-    assert.strictEqual(encoder.encode(utf8Bytes1), "1%00 !~%7F%E3%81%82+");
-    assert.strictEqual(encoder.encode(Uint8Array.of(255)), "%FF");
-    assert.strictEqual(encoder.encode(Uint8Array.of(0)), "%00");
-    assert.strictEqual(encoder.encode(Uint8Array.of(0,32,65)), "%00 A");
-    assert.strictEqual(encoder.encode(Uint8Array.of(255)), "%FF");
+    expect(encoder.encode(Uint8Array.of())).to.equal("");
+    expect(encoder.encode(Uint8Array.of(3,2,1,0,0xFF,0xFE,0xFD,0xFC))).to.equal("%03%02%01%00%FF%FE%FD%FC");
+    expect(encoder.encode(utf8Bytes1)).to.equal("1%00 !~%7F%E3%81%82+");
+    expect(encoder.encode(Uint8Array.of(255))).to.equal("%FF");
+    expect(encoder.encode(Uint8Array.of(0))).to.equal("%00");
+    expect(encoder.encode(Uint8Array.of(0,32,65))).to.equal("%00 A");
+    expect(encoder.encode(Uint8Array.of(255))).to.equal("%FF");
 
   });
 
   it("PercentEncoder({encodeSet:[...]})/encode", () => {
     const encoder = new PercentEncoder({encodeSet:[ 0x20, 0x22, 0x3C, 0x3E, 0x60 ]});
 
-    assert.strictEqual(encoder.encode(Uint8Array.of()), "");
-    assert.strictEqual(encoder.encode(utf8Bytes1), "1%00%20!~%7F%E3%81%82+");
+    expect(encoder.encode(Uint8Array.of())).to.equal("");
+    expect(encoder.encode(utf8Bytes1)).to.equal("1%00%20!~%7F%E3%81%82+");
 
   });
 
   it("PercentEncoder({encodeSet:[...]})/encode", () => {
     const encoder = new PercentEncoder({encodeSet:[ 0x20, 0x22, 0x23, 0x24, 0x26, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D ]});
 
-    assert.strictEqual(encoder.encode(Uint8Array.of()), "");
-    assert.strictEqual(encoder.encode(utf8Bytes1), "1%00%20!~%7F%E3%81%82%2B");
-    assert.strictEqual(encoder.encode(Uint8Array.of(0,32,65)), "%00%20A");
-    assert.strictEqual(encoder.encode(Uint8Array.of(255)), "%FF");
+    expect(encoder.encode(Uint8Array.of())).to.equal("");
+    expect(encoder.encode(utf8Bytes1)).to.equal("1%00%20!~%7F%E3%81%82%2B");
+    expect(encoder.encode(Uint8Array.of(0,32,65))).to.equal("%00%20A");
+    expect(encoder.encode(Uint8Array.of(255))).to.equal("%FF");
 
-    assert.strictEqual(encoder.encode(utf8Bytes1), globalThis.encodeURIComponent("1\u{0} !~\u{7F}あ+"));
+    expect(encoder.encode(utf8Bytes1)).to.equal(globalThis.encodeURIComponent("1\u{0} !~\u{7F}あ+"));
 
     const x1 = Uint8Array.of(
       0,1,2,3,4,5,6,7,8,9,
@@ -98,40 +96,37 @@ describe("PercentEncoder.prototype.encode", () => {
       120,121,122,123,124,125,126,127
     );
     const x1b = Array.from(x1, (i)=>String.fromCharCode(i)).join("");
-    assert.strictEqual(encoder.encode(x1), globalThis.encodeURIComponent(x1b));
+    expect(encoder.encode(x1)).to.equal(globalThis.encodeURIComponent(x1b));
 
-    assert.strictEqual(encoder.encode(x2bUtf8), globalThis.encodeURIComponent(x2b));
+    expect(encoder.encode(x2bUtf8)).to.equal(globalThis.encodeURIComponent(x2b));
 
   });
 
   it("PercentEncoder({encodeSet:[...],spaceAsPlus:true})/encode", () => {
     const encoder = new PercentEncoder({encodeSet:[ 0x20, 0x21, 0x22, 0x23, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D, 0x7E ],spaceAsPlus:true});
 
-    assert.strictEqual(encoder.encode(Uint8Array.of()), "");
-    assert.strictEqual(encoder.encode(utf8Bytes1), "1%00+%21%7E%7F%E3%81%82%2B");
-    assert.strictEqual(encoder.encode(Uint8Array.of(0,32,65)), "%00+A");
-    assert.strictEqual(encoder.encode(Uint8Array.of(255)), "%FF");
+    expect(encoder.encode(Uint8Array.of())).to.equal("");
+    expect(encoder.encode(utf8Bytes1)).to.equal("1%00+%21%7E%7F%E3%81%82%2B");
+    expect(encoder.encode(Uint8Array.of(0,32,65))).to.equal("%00+A");
+    expect(encoder.encode(Uint8Array.of(255))).to.equal("%FF");
 
     const usp = new URLSearchParams();
     usp.set("p1", "1\u{0} !~\u{7F}あ+");
-    assert.strictEqual(encoder.encode(utf8Bytes1), usp.toString().substring(3));
+    expect(encoder.encode(utf8Bytes1)).to.equal(usp.toString().substring(3));
 
     const u = new URL("http://example.com/");
     u.searchParams.set("p1", x2b);
     const e = u.search.replace("?p1=", "");
-    assert.strictEqual(encoder.encode(x2bUtf8), e);
+    expect(encoder.encode(x2bUtf8)).to.equal(e);
 
   });
 
   it("PercentEncoder({encodeSet:[],spaceAsPlus:true})/encode", () => {
 
-    assert.throws(() => {
+    expect(() => {
       const encoder = new PercentEncoder({encodeSet:[],spaceAsPlus:true});
       encoder.encode(Uint8Array.of());
-    }, {
-      name: "RangeError",
-      message: "options.encodeSet, options.spaceAsPlus"
-    });
+    }).to.throw(RangeError, "options.encodeSet, options.spaceAsPlus").with.property("name", "RangeError");
 
   });
 
@@ -141,19 +136,19 @@ describe("PercentEncoder.get", () => {
   it("get()", () => {
     const encoder = PercentEncoder.get();
 
-    assert.strictEqual(encoder.encode(Uint8Array.of()), "");
-    assert.strictEqual(encoder.encode(Uint8Array.of(3,2,1,0,0xFF,0xFE,0xFD,0xFC)), "%03%02%01%00%FF%FE%FD%FC");
+    expect(encoder.encode(Uint8Array.of())).to.equal("");
+    expect(encoder.encode(Uint8Array.of(3,2,1,0,0xFF,0xFE,0xFD,0xFC))).to.equal("%03%02%01%00%FF%FE%FD%FC");
 
   });
 
   it("get(Object)", () => {
     const encoder1 = PercentEncoder.get({spaceAsPlus:true});
     const encoder2 = PercentEncoder.get({spaceAsPlus:false});
-    assert.notStrictEqual(encoder1, encoder2);
+    expect(encoder1).to.not.equal(encoder2);
 
     const encoder21 = PercentEncoder.get({spaceAsPlus:false});
     const encoder22 = PercentEncoder.get({spaceAsPlus:false});
-    assert.strictEqual(encoder21, encoder22);
+    expect(encoder21).to.equal(encoder22);
 
   });
 

@@ -1,4 +1,4 @@
-import assert from "node:assert";
+import { expect } from '@esm-bundle/chai';
 import { Percent } from "./percent";
 
 const utf8 = new TextEncoder();
@@ -7,86 +7,80 @@ const utf8Bytes1 = utf8.encode("1\u{0} !~\u{7F}あ+");
 describe("Percent.decode", () => {
   it("decode(string)", () => {
     const decoded11 = Percent.decode("");
-    assert.strictEqual(JSON.stringify([...decoded11]), "[]");
+    expect(JSON.stringify([...decoded11])).to.equal("[]");
 
     const decoded12 = Percent.decode("%03%02%01%00%FF%FE%FD%FC");
-    assert.strictEqual(JSON.stringify([...decoded12]), "[3,2,1,0,255,254,253,252]");
+    expect(JSON.stringify([...decoded12])).to.equal("[3,2,1,0,255,254,253,252]");
 
     const decoded13 = Percent.decode("1%00 !~%7F%E3%81%82+");
-    assert.strictEqual(JSON.stringify([...decoded13]), JSON.stringify([...utf8Bytes1]));
+    expect(JSON.stringify([...decoded13])).to.equal(JSON.stringify([...utf8Bytes1]));
 
     const decoded21 = Percent.decode("%03%02%01%00%FF%FE%FD%FC");
-    assert.strictEqual(JSON.stringify([...decoded21]), "[3,2,1,0,255,254,253,252]");
+    expect(JSON.stringify([...decoded21])).to.equal("[3,2,1,0,255,254,253,252]");
     const decoded22 = Percent.decode("%03%20%02%01%00%FF%FE%FD%FC");
-    assert.strictEqual(JSON.stringify([...decoded22]), "[3,32,2,1,0,255,254,253,252]");
+    expect(JSON.stringify([...decoded22])).to.equal("[3,32,2,1,0,255,254,253,252]");
     const decoded23 = Percent.decode("1%00%20!~%7F%E3%81%82+");
-    assert.strictEqual(JSON.stringify([...decoded23]), JSON.stringify([...utf8Bytes1]));
+    expect(JSON.stringify([...decoded23])).to.equal(JSON.stringify([...utf8Bytes1]));
 
     const decoded41 = Percent.decode("%03%20%02%01%00%FF%FE%FD%FC");
-    assert.strictEqual(JSON.stringify([...decoded41]), "[3,32,2,1,0,255,254,253,252]");
+    expect(JSON.stringify([...decoded41])).to.equal("[3,32,2,1,0,255,254,253,252]");
     const decoded42 = Percent.decode("%03%20%02%01%00%FF%FE%FD%2B%FC");
-    assert.strictEqual(JSON.stringify([...decoded42]), "[3,32,2,1,0,255,254,253,43,252]");
+    expect(JSON.stringify([...decoded42])).to.equal("[3,32,2,1,0,255,254,253,43,252]");
     const decoded43 = Percent.decode(globalThis.encodeURIComponent("1\u{0} !~\u{7F}あ+"));
-    assert.strictEqual(JSON.stringify([...decoded43]), JSON.stringify([...utf8Bytes1]));
+    expect(JSON.stringify([...decoded43])).to.equal(JSON.stringify([...utf8Bytes1]));
 
     const decoded52b = Percent.decode("%03%02%01%00%FF%FE%FD%FC%20%41");
-    assert.strictEqual(JSON.stringify([...decoded52b]), "[3,2,1,0,255,254,253,252,32,65]");
+    expect(JSON.stringify([...decoded52b])).to.equal("[3,2,1,0,255,254,253,252,32,65]");
 
-    assert.throws(() => {
+    expect(() => {
       Percent.decode("あ");
-    }, {
-      name: "TypeError",
-      message: "decode error (1)"
-    });
+    }).to.throw(TypeError, "decode error (1)").with.property("name", "TypeError");
 
     const decoded55 = Percent.decode("%%65A");
-    assert.strictEqual(JSON.stringify([...decoded55]), "[37,101,65]");
+    expect(JSON.stringify([...decoded55])).to.equal("[37,101,65]");
 
     const decoded56 = Percent.decode("%41");
-    assert.strictEqual(JSON.stringify([...decoded56]), "[65]");
+    expect(JSON.stringify([...decoded56])).to.equal("[65]");
 
     const decoded57 = Percent.decode("%ff");
-    assert.strictEqual(JSON.stringify([...decoded57]), "[255]");
+    expect(JSON.stringify([...decoded57])).to.equal("[255]");
 
     const decoded57b = Percent.decode("%FF");
-    assert.strictEqual(JSON.stringify([...decoded57b]), "[255]");
+    expect(JSON.stringify([...decoded57b])).to.equal("[255]");
 
     const decoded57c = Percent.decode("%f");
-    assert.strictEqual(JSON.stringify([...decoded57c]), "[37,102]");
+    expect(JSON.stringify([...decoded57c])).to.equal("[37,102]");
 
     const decoded57d = Percent.decode("%fff");
-    assert.strictEqual(JSON.stringify([...decoded57d]), "[255,102]");
+    expect(JSON.stringify([...decoded57d])).to.equal("[255,102]");
 
   });
 
   it("decode(string, {spaceAsPlus:true})", () => {
     const decoded11 = Percent.decode("", {spaceAsPlus:true});
-    assert.strictEqual(JSON.stringify([...decoded11]), "[]");
+    expect(JSON.stringify([...decoded11])).to.equal("[]");
 
     const decoded12 = Percent.decode("%03%02%01%00%FF%FE%FD%FC", {spaceAsPlus:true});
-    assert.strictEqual(JSON.stringify([...decoded12]), "[3,2,1,0,255,254,253,252]");
+    expect(JSON.stringify([...decoded12])).to.equal("[3,2,1,0,255,254,253,252]");
 
     const decoded13 = Percent.decode("1%00 !~%7F%E3%81%82%2B", {spaceAsPlus:true});
-    assert.strictEqual(JSON.stringify([...decoded13]), JSON.stringify([...utf8Bytes1]));
+    expect(JSON.stringify([...decoded13])).to.equal(JSON.stringify([...utf8Bytes1]));
     const decoded13b = Percent.decode("1%00+!~%7F%E3%81%82%2B", {spaceAsPlus:true});
-    assert.strictEqual(JSON.stringify([...decoded13b]), JSON.stringify([...utf8Bytes1]));
+    expect(JSON.stringify([...decoded13b])).to.equal(JSON.stringify([...utf8Bytes1]));
 
     const decoded31 = Percent.decode("%03+%02%01%00%FF%FE%FD%FC", {spaceAsPlus:true});
-    assert.strictEqual(JSON.stringify([...decoded31]), "[3,32,2,1,0,255,254,253,252]");
+    expect(JSON.stringify([...decoded31])).to.equal("[3,32,2,1,0,255,254,253,252]");
     const decoded32 = Percent.decode("%03+%02%01%00%FF%FE%FD%2B%FC", {spaceAsPlus:true});
-    assert.strictEqual(JSON.stringify([...decoded32]), "[3,32,2,1,0,255,254,253,43,252]");
+    expect(JSON.stringify([...decoded32])).to.equal("[3,32,2,1,0,255,254,253,43,252]");
     const decoded33 = Percent.decode("1%00+!~%7F%E3%81%82%2B", {spaceAsPlus:true});
-    assert.strictEqual(JSON.stringify([...decoded33]), JSON.stringify([...utf8Bytes1]));
+    expect(JSON.stringify([...decoded33])).to.equal(JSON.stringify([...utf8Bytes1]));
 
     const decoded52b = Percent.decode("%03%02%01%00%FF%FE%FD%FC%20%41", {spaceAsPlus:true});
-    assert.strictEqual(JSON.stringify([...decoded52b]), "[3,2,1,0,255,254,253,252,32,65]");
+    expect(JSON.stringify([...decoded52b])).to.equal("[3,2,1,0,255,254,253,252,32,65]");
 
-    assert.throws(() => {
+    expect(() => {
       Percent.decode("あ", {spaceAsPlus:true});
-    }, {
-      name: "TypeError",
-      message: "decode error (1)"
-    });
+    }).to.throw(TypeError, "decode error (1)").with.property("name", "TypeError");
 
   });
 
@@ -94,55 +88,52 @@ describe("Percent.decode", () => {
     const op = {encodeSet:[ 0x20, 0x21, 0x22, 0x23, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D, 0x7E ]};
 
     const decoded11 = Percent.decode("", op);
-    assert.strictEqual(JSON.stringify([...decoded11]), "[]");
+    expect(JSON.stringify([...decoded11])).to.equal("[]");
 
     const decoded12 = Percent.decode("%03%02%01%00%FF%FE%FD%FC", op);
-    assert.strictEqual(JSON.stringify([...decoded12]), "[3,2,1,0,255,254,253,252]");
+    expect(JSON.stringify([...decoded12])).to.equal("[3,2,1,0,255,254,253,252]");
 
     const decoded13 = Percent.decode("1%00 !~%7F%E3%81%82+", op);
-    assert.strictEqual(JSON.stringify([...decoded13]), JSON.stringify([...utf8Bytes1]));
+    expect(JSON.stringify([...decoded13])).to.equal(JSON.stringify([...utf8Bytes1]));
 
     const decoded21 = Percent.decode("%03%02%01%00%FF%FE%FD%FC", op);
-    assert.strictEqual(JSON.stringify([...decoded21]), "[3,2,1,0,255,254,253,252]");
+    expect(JSON.stringify([...decoded21])).to.equal("[3,2,1,0,255,254,253,252]");
     const decoded22 = Percent.decode("%03%20%02%01%00%FF%FE%FD%FC", op);
-    assert.strictEqual(JSON.stringify([...decoded22]), "[3,32,2,1,0,255,254,253,252]");
+    expect(JSON.stringify([...decoded22])).to.equal("[3,32,2,1,0,255,254,253,252]");
     const decoded23 = Percent.decode("1%00%20!~%7F%E3%81%82+", op);
-    assert.strictEqual(JSON.stringify([...decoded23]), JSON.stringify([...utf8Bytes1]));
+    expect(JSON.stringify([...decoded23])).to.equal(JSON.stringify([...utf8Bytes1]));
 
     const decoded41 = Percent.decode("%03%20%02%01%00%FF%FE%FD%FC", op);
-    assert.strictEqual(JSON.stringify([...decoded41]), "[3,32,2,1,0,255,254,253,252]");
+    expect(JSON.stringify([...decoded41])).to.equal("[3,32,2,1,0,255,254,253,252]");
     const decoded42 = Percent.decode("%03%20%02%01%00%FF%FE%FD%2B%FC", op);
-    assert.strictEqual(JSON.stringify([...decoded42]), "[3,32,2,1,0,255,254,253,43,252]");
+    expect(JSON.stringify([...decoded42])).to.equal("[3,32,2,1,0,255,254,253,43,252]");
     const decoded43 = Percent.decode(globalThis.encodeURIComponent("1\u{0} !~\u{7F}あ+"), op);
-    assert.strictEqual(JSON.stringify([...decoded43]), JSON.stringify([...utf8Bytes1]));
+    expect(JSON.stringify([...decoded43])).to.equal(JSON.stringify([...utf8Bytes1]));
 
     const decoded52b = Percent.decode("%03%02%01%00%FF%FE%FD%FC%20%41", op);
-    assert.strictEqual(JSON.stringify([...decoded52b]), "[3,2,1,0,255,254,253,252,32,65]");
+    expect(JSON.stringify([...decoded52b])).to.equal("[3,2,1,0,255,254,253,252,32,65]");
 
-    assert.throws(() => {
+    expect(() => {
       Percent.decode("あ", op);
-    }, {
-      name: "TypeError",
-      message: "decode error (1)"
-    });
+    }).to.throw(TypeError, "decode error (1)").with.property("name", "TypeError");
 
     const decoded55 = Percent.decode("%%65A", op);
-    assert.strictEqual(JSON.stringify([...decoded55]), "[37,101,65]");
+    expect(JSON.stringify([...decoded55])).to.equal("[37,101,65]");
 
     const decoded56 = Percent.decode("%41", op);
-    assert.strictEqual(JSON.stringify([...decoded56]), "[65]");
+    expect(JSON.stringify([...decoded56])).to.equal("[65]");
 
     const decoded57 = Percent.decode("%ff", op);
-    assert.strictEqual(JSON.stringify([...decoded57]), "[255]");
+    expect(JSON.stringify([...decoded57])).to.equal("[255]");
 
     const decoded57b = Percent.decode("%FF", op);
-    assert.strictEqual(JSON.stringify([...decoded57b]), "[255]");
+    expect(JSON.stringify([...decoded57b])).to.equal("[255]");
 
     const decoded57c = Percent.decode("%f", op);
-    assert.strictEqual(JSON.stringify([...decoded57c]), "[37,102]");
+    expect(JSON.stringify([...decoded57c])).to.equal("[37,102]");
 
     const decoded57d = Percent.decode("%fff", op);
-    assert.strictEqual(JSON.stringify([...decoded57d]), "[255,102]");
+    expect(JSON.stringify([...decoded57d])).to.equal("[255,102]");
 
   });
 
@@ -181,44 +172,44 @@ const x2bUtf8 = new TextEncoder().encode(x2b);
 
 describe("Percent.encode", () => {
   it("encode(Uint8Array)", () => {
-    assert.strictEqual(Percent.encode(Uint8Array.of()), "");
-    assert.strictEqual(Percent.encode(Uint8Array.of(3,2,1,0,0xFF,0xFE,0xFD,0xFC)), "%03%02%01%00%FF%FE%FD%FC");
-    assert.strictEqual(Percent.encode(utf8Bytes1), "%31%00%20%21%7E%7F%E3%81%82%2B");
-    assert.strictEqual(Percent.encode(Uint8Array.of(255)), "%FF");
-    assert.strictEqual(Percent.encode(Uint8Array.of(0)), "%00");
-    assert.strictEqual(Percent.encode(Uint8Array.of(0,32,65)), "%00%20%41");
-    assert.strictEqual(Percent.encode(Uint8Array.of(255)), "%FF");
+    expect(Percent.encode(Uint8Array.of())).to.equal("");
+    expect(Percent.encode(Uint8Array.of(3,2,1,0,0xFF,0xFE,0xFD,0xFC))).to.equal("%03%02%01%00%FF%FE%FD%FC");
+    expect(Percent.encode(utf8Bytes1)).to.equal("%31%00%20%21%7E%7F%E3%81%82%2B");
+    expect(Percent.encode(Uint8Array.of(255))).to.equal("%FF");
+    expect(Percent.encode(Uint8Array.of(0))).to.equal("%00");
+    expect(Percent.encode(Uint8Array.of(0,32,65))).to.equal("%00%20%41");
+    expect(Percent.encode(Uint8Array.of(255))).to.equal("%FF");
 
   });
 
   it("encode(Uint8Array, {encodeSet:[]})", () => {
-    assert.strictEqual(Percent.encode(Uint8Array.of(), {encodeSet:[]}), "");
-    assert.strictEqual(Percent.encode(Uint8Array.of(3,2,1,0,0xFF,0xFE,0xFD,0xFC), {encodeSet:[]}), "%03%02%01%00%FF%FE%FD%FC");
-    assert.strictEqual(Percent.encode(utf8Bytes1, {encodeSet:[]}), "1%00 !~%7F%E3%81%82+");
-    assert.strictEqual(Percent.encode(Uint8Array.of(255), {encodeSet:[]}), "%FF");
-    assert.strictEqual(Percent.encode(Uint8Array.of(0), {encodeSet:[]}), "%00");
-    assert.strictEqual(Percent.encode(Uint8Array.of(0,32,65), {encodeSet:[]}), "%00 A");
-    assert.strictEqual(Percent.encode(Uint8Array.of(255), {encodeSet:[]}), "%FF");
+    expect(Percent.encode(Uint8Array.of(), {encodeSet:[]})).to.equal("");
+    expect(Percent.encode(Uint8Array.of(3,2,1,0,0xFF,0xFE,0xFD,0xFC), {encodeSet:[]})).to.equal("%03%02%01%00%FF%FE%FD%FC");
+    expect(Percent.encode(utf8Bytes1, {encodeSet:[]})).to.equal("1%00 !~%7F%E3%81%82+");
+    expect(Percent.encode(Uint8Array.of(255), {encodeSet:[]})).to.equal("%FF");
+    expect(Percent.encode(Uint8Array.of(0), {encodeSet:[]})).to.equal("%00");
+    expect(Percent.encode(Uint8Array.of(0,32,65), {encodeSet:[]})).to.equal("%00 A");
+    expect(Percent.encode(Uint8Array.of(255), {encodeSet:[]})).to.equal("%FF");
 
   });
 
   it("encode(Uint8Array, {encodeSet:[...]})", () => {
     const op = {encodeSet:[ 0x20, 0x22, 0x3C, 0x3E, 0x60 ]};
 
-    assert.strictEqual(Percent.encode(Uint8Array.of(), op), "");
-    assert.strictEqual(Percent.encode(utf8Bytes1, op), "1%00%20!~%7F%E3%81%82+");
+    expect(Percent.encode(Uint8Array.of(), op)).to.equal("");
+    expect(Percent.encode(utf8Bytes1, op)).to.equal("1%00%20!~%7F%E3%81%82+");
 
   });
 
   it("encode(Uint8Array, {encodeSet:[...]})", () => {
     const op = {encodeSet:[ 0x20, 0x22, 0x23, 0x24, 0x26, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D ]};
 
-    assert.strictEqual(Percent.encode(Uint8Array.of(), op), "");
-    assert.strictEqual(Percent.encode(utf8Bytes1, op), "1%00%20!~%7F%E3%81%82%2B");
-    assert.strictEqual(Percent.encode(Uint8Array.of(0,32,65), op), "%00%20A");
-    assert.strictEqual(Percent.encode(Uint8Array.of(255), op), "%FF");
+    expect(Percent.encode(Uint8Array.of(), op)).to.equal("");
+    expect(Percent.encode(utf8Bytes1, op)).to.equal("1%00%20!~%7F%E3%81%82%2B");
+    expect(Percent.encode(Uint8Array.of(0,32,65), op)).to.equal("%00%20A");
+    expect(Percent.encode(Uint8Array.of(255), op)).to.equal("%FF");
 
-    assert.strictEqual(Percent.encode(utf8Bytes1, op), globalThis.encodeURIComponent("1\u{0} !~\u{7F}あ+"));
+    expect(Percent.encode(utf8Bytes1, op)).to.equal(globalThis.encodeURIComponent("1\u{0} !~\u{7F}あ+"));
 
     const x1 = Uint8Array.of(
       0,1,2,3,4,5,6,7,8,9,
@@ -236,40 +227,37 @@ describe("Percent.encode", () => {
       120,121,122,123,124,125,126,127
     );
     const x1b = Array.from(x1, (i)=>String.fromCharCode(i)).join("");
-    assert.strictEqual(Percent.encode(x1, op), globalThis.encodeURIComponent(x1b));
+    expect(Percent.encode(x1, op)).to.equal(globalThis.encodeURIComponent(x1b));
 
-    assert.strictEqual(Percent.encode(x2bUtf8, op), globalThis.encodeURIComponent(x2b));
+    expect(Percent.encode(x2bUtf8, op)).to.equal(globalThis.encodeURIComponent(x2b));
 
   });
 
   it("encode(Uint8Array, {encodeSet:[...],spaceAsPlus:true})", () => {
     const op = {encodeSet:[ 0x20, 0x21, 0x22, 0x23, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D, 0x7E ],spaceAsPlus:true};
 
-    assert.strictEqual(Percent.encode(Uint8Array.of(), op), "");
-    assert.strictEqual(Percent.encode(utf8Bytes1, op), "1%00+%21%7E%7F%E3%81%82%2B");
-    assert.strictEqual(Percent.encode(Uint8Array.of(0,32,65), op), "%00+A");
-    assert.strictEqual(Percent.encode(Uint8Array.of(255), op), "%FF");
+    expect(Percent.encode(Uint8Array.of(), op)).to.equal("");
+    expect(Percent.encode(utf8Bytes1, op)).to.equal("1%00+%21%7E%7F%E3%81%82%2B");
+    expect(Percent.encode(Uint8Array.of(0,32,65), op)).to.equal("%00+A");
+    expect(Percent.encode(Uint8Array.of(255), op)).to.equal("%FF");
 
     const usp = new URLSearchParams();
     usp.set("p1", "1\u{0} !~\u{7F}あ+");
-    assert.strictEqual(Percent.encode(utf8Bytes1, op), usp.toString().substring(3));
+    expect(Percent.encode(utf8Bytes1, op)).to.equal(usp.toString().substring(3));
 
     const u = new URL("http://example.com/");
     u.searchParams.set("p1", x2b);
     const e = u.search.replace("?p1=", "");
-    assert.strictEqual(Percent.encode(x2bUtf8, op), e);
+    expect(Percent.encode(x2bUtf8, op)).to.equal(e);
 
   });
 
   it("encode(Uint8Array, {encodeSet:[],spaceAsPlus:true})", () => {
     const op = {encodeSet:[],spaceAsPlus:true};
 
-    assert.throws(() => {
+    expect(() => {
       Percent.encode(Uint8Array.of(), op);
-    }, {
-      name: "RangeError",
-      message: "options.encodeSet, options.spaceAsPlus"
-    });
+    }).to.throw(RangeError, "options.encodeSet, options.spaceAsPlus").with.property("name", "RangeError");
 
   });
 
