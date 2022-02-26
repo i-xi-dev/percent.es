@@ -2,7 +2,7 @@
 
 import {
   type uint8,
-  Uint8,
+  isUint8,
 } from "@i-xi-dev/fundamental";
 
 /**
@@ -278,7 +278,7 @@ const ALL: Readonly<Array<uint8>> = Object.freeze([
 
 function isArrayOfUint8(value: unknown): value is Array<uint8> {
   if (Array.isArray(value)) {
-    return value.every((i) => Uint8.isUint8(i));
+    return value.every((i) => isUint8(i));
   }
   return false;
 }
