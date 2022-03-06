@@ -118,7 +118,7 @@ function decode(encoded: string, options: ResolvedOptions): Uint8Array {
  * @param encodeSet 0x00-0x1F,0x25,0x7F-0xFF以外に"%XX"への変換対象とするバイトのセット
  * @returns バイトが"%XX"の形にする対象か否か
  */
-function isByteIncludedInEncodeSet(byte: uint8, encodeSet: Readonly<Array<uint8>>): boolean {
+function _isByteIncludedInEncodeSet(byte: uint8, encodeSet: Readonly<Array<uint8>>): boolean {
   return ((byte < 0x20) || (byte > 0x7E) || (byte === 0x25) || encodeSet.includes(byte));
 }
 
@@ -128,7 +128,7 @@ function isByteIncludedInEncodeSet(byte: uint8, encodeSet: Readonly<Array<uint8>
  * @param bytes バイト
  * @returns "%XX"の形の文字列
  */
-function formatByte(bytes: Uint8Array): string {
+function _formatByte(bytes: Uint8Array): string {
   const byteStringArray = [ ...bytes ].map((byte) => {
     return "%" + byte.toString(16).toUpperCase().padStart(2, "0");
   });
@@ -151,10 +151,10 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
   let work: Array<uint8> = [];
   let encoded = "";
   for (const byte of toEncode) {
-    if (isByteIncludedInEncodeSet(byte as uint8, options.encodeSet)) {
+    if (_isByteIncludedInEncodeSet(byte as uint8, options.encodeSet)) {
       if (byte === 0x20) {
         if (options.spaceAsPlus === true) {
-          encoded = encoded + formatByte(Uint8Array.from(work)) + "+";
+          encoded = encoded + _formatByte(Uint8Array.from(work)) + "+";
           work = [];
         }
         else {
@@ -167,11 +167,11 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
     }
     else {
       // 上記以外はbinary stringと同じ
-      encoded = encoded + formatByte(Uint8Array.from(work)) + String.fromCharCode(byte);
+      encoded = encoded + _formatByte(Uint8Array.from(work)) + String.fromCharCode(byte);
       work = [];
     }
   }
-  encoded = encoded + formatByte(Uint8Array.from(work));
+  encoded = encoded + _formatByte(Uint8Array.from(work));
   return encoded;
 }
 
