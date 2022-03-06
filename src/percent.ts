@@ -2,7 +2,7 @@
 
 import {
   type uint8,
-  isUint8,
+  isArrayOfUint8,
 } from "@i-xi-dev/fundamental";
 
 /**
@@ -33,7 +33,7 @@ type PercentOptions = {
 /**
  * 未設定項目の存在しないオプション
  */
-type ResolvedOptions = {
+type _ResolvedOptions = {
   /**
    * 0x00-0x1F,0x25,0x7F-0xFF以外に"%XX"への変換対象とするバイトのセット
    */
@@ -62,7 +62,7 @@ type ResolvedOptions = {
  * @returns バイト列
  * @throws {TypeError} The `encoded` is not Percent-encoded string.
  */
-function decode(encoded: string, options: ResolvedOptions): Uint8Array {
+function _decode(encoded: string, options: _ResolvedOptions): Uint8Array {
   if (/^[\u0020-\u007E]*$/.test(encoded) !== true) {
     throw new TypeError("decode error (1)");
   }
@@ -147,7 +147,7 @@ function _formatByte(bytes: Uint8Array): string {
  * @param options パーセント符号化の符号化オプション
  * @returns パーセント符号化された文字列
  */
-function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
+function _encode(toEncode: Uint8Array, options: _ResolvedOptions): string {
   let work: Array<uint8> = [];
   let encoded = "";
   for (const byte of toEncode) {
@@ -178,7 +178,7 @@ function encode(toEncode: Uint8Array, options: ResolvedOptions): string {
 /**
  * 全バイトを"%XX"の形に符号化する用
  */
-const ALL: Readonly<Array<uint8>> = Object.freeze([
+const _ALL: Readonly<Array<uint8>> = Object.freeze([
   0x20,
   0x21,
   0x22,
@@ -276,13 +276,6 @@ const ALL: Readonly<Array<uint8>> = Object.freeze([
   0x7E,
 ]);
 
-function isArrayOfUint8(value: unknown): value is Array<uint8> {
-  if (Array.isArray(value)) {
-    return value.every((i) => isUint8(i));
-  }
-  return false;
-}
-
 /**
  * オプションをResolvedOptions型に変換する
  * 未設定項目はデフォルト値で埋める
@@ -291,13 +284,13 @@ function isArrayOfUint8(value: unknown): value is Array<uint8> {
  * @returns 未設定項目を埋めたオプションの複製
  * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
  */
-function resolveOptions(options: PercentOptions | ResolvedOptions = {}): ResolvedOptions {
+function _resolveOptions(options: PercentOptions | _ResolvedOptions = {}): _ResolvedOptions {
   let encodeSet: Readonly<Array<uint8>>;
   if (isArrayOfUint8(options.encodeSet)) {
     encodeSet = Object.freeze([ ...options.encodeSet ]);
   }
   else {
-    encodeSet = ALL;
+    encodeSet = _ALL;
   }
 
   let spaceAsPlus: boolean;
@@ -342,21 +335,21 @@ interface Percent {
 
 const Percent = Object.freeze({
   decode(encoded: string, options?: PercentOptions): Uint8Array {
-    const resolvedOptions = resolveOptions(options);
-    return decode(encoded, resolvedOptions);
+    const resolvedOptions = _resolveOptions(options);
+    return _decode(encoded, resolvedOptions);
   },
 
   encode(toEncode: Uint8Array, options?: PercentOptions): string {
-    const resolvedOptions = resolveOptions(options);
-    return encode(toEncode, resolvedOptions);
+    const resolvedOptions = _resolveOptions(options);
+    return _encode(toEncode, resolvedOptions);
   },
 }) as Percent;
 
 export {
   type PercentOptions,
-  type ResolvedOptions,
-  decode,
-  encode,
-  resolveOptions,
+  type _ResolvedOptions,
+  _decode,
+  _encode,
+  _resolveOptions,
   Percent,
 };

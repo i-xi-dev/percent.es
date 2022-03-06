@@ -6,9 +6,9 @@ import {
 } from "@i-xi-dev/fundamental";
 import {
   type PercentOptions,
-  type ResolvedOptions,
-  encode,
-  resolveOptions,
+  type _ResolvedOptions,
+  _encode,
+  _resolveOptions,
 } from "./percent";
 
 /**
@@ -24,14 +24,14 @@ class PercentEncoder implements ByteEncoder {
   /**
    * 未設定項目を埋めたオプション
    */
-  #options: ResolvedOptions;
+  #options: _ResolvedOptions;
 
   /**
    * @param options - The `PercentOptions` dictionary.
    * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
    */
   constructor(options?: PercentOptions) {
-    this.#options = resolveOptions(options);
+    this.#options = _resolveOptions(options);
     Object.freeze(this);
   }
 
@@ -42,7 +42,7 @@ class PercentEncoder implements ByteEncoder {
    * @returns A string containing the Percent-encoded characters.
    */
   encode(toEncode: Uint8Array): string {
-    return encode(toEncode, this.#options);
+    return _encode(toEncode, this.#options);
   }
 
   /**
@@ -52,7 +52,7 @@ class PercentEncoder implements ByteEncoder {
    * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
    */
   static get(options?: PercentOptions): PercentEncoder {
-    const resolvedOptions = resolveOptions(options);
+    const resolvedOptions = _resolveOptions(options);
 
     const poolKey = JSON.stringify(resolvedOptions);
     let encoder = PercentEncoder.#pool.get(poolKey);
