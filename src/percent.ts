@@ -53,6 +53,173 @@ type _ResolvedOptions = {
 };
 
 /**
+ * 全バイトを%xxにする用
+ * （スペースは+にしない）
+ */
+const _DEFAULT_OPTIONS: _ResolvedOptions = Object.freeze({
+  encodeSet: Object.freeze([
+    0x20,
+    0x21,
+    0x22,
+    0x23,
+    0x24,
+    // 0x25, "%"は無条件で"%25"にする
+    0x26,
+    0x27,
+    0x28,
+    0x29,
+    0x2A,
+    0x2B,
+    0x2C,
+    0x2D,
+    0x2E,
+    0x2F,
+    0x30,
+    0x31,
+    0x32,
+    0x33,
+    0x34,
+    0x35,
+    0x36,
+    0x37,
+    0x38,
+    0x39,
+    0x3A,
+    0x3B,
+    0x3C,
+    0x3D,
+    0x3E,
+    0x3F,
+    0x40,
+    0x41,
+    0x42,
+    0x43,
+    0x44,
+    0x45,
+    0x46,
+    0x47,
+    0x48,
+    0x49,
+    0x4A,
+    0x4B,
+    0x4C,
+    0x4D,
+    0x4E,
+    0x4F,
+    0x50,
+    0x51,
+    0x52,
+    0x53,
+    0x54,
+    0x55,
+    0x56,
+    0x57,
+    0x58,
+    0x59,
+    0x5A,
+    0x5B,
+    0x5C,
+    0x5D,
+    0x5E,
+    0x5F,
+    0x60,
+    0x61,
+    0x62,
+    0x63,
+    0x64,
+    0x65,
+    0x66,
+    0x67,
+    0x68,
+    0x69,
+    0x6A,
+    0x6B,
+    0x6C,
+    0x6D,
+    0x6E,
+    0x6F,
+    0x70,
+    0x71,
+    0x72,
+    0x73,
+    0x74,
+    0x75,
+    0x76,
+    0x77,
+    0x78,
+    0x79,
+    0x7A,
+    0x7B,
+    0x7C,
+    0x7D,
+    0x7E,
+  ] as Array<uint8>),
+  spaceAsPlus: false,
+});
+
+const _MIN_OPTIONS: _ResolvedOptions = Object.freeze({
+  encodeSet: Object.freeze([] as Array<uint8>),
+  spaceAsPlus: false,
+});
+
+const _URI_FRAGMENT_OPTIONS: _ResolvedOptions = Object.freeze({
+  encodeSet: Object.freeze([ 0x20, 0x22, 0x3C, 0x3E, 0x60 ] as Array<uint8>),
+  spaceAsPlus: false,
+});
+
+const _URI_QUERY_OPTIONS: _ResolvedOptions = Object.freeze({
+  encodeSet: Object.freeze([ 0x20, 0x22, 0x23, 0x3C, 0x3E ] as Array<uint8>),
+  spaceAsPlus: false,
+});
+
+const _URI_SPECIAL_QUERY_OPTIONS: _ResolvedOptions = Object.freeze({
+  encodeSet: Object.freeze([ 0x20, 0x22, 0x23, 0x27, 0x3C, 0x3E ] as Array<uint8>),
+  spaceAsPlus: false,
+});
+
+const _URI_PATH_OPTIONS: _ResolvedOptions = Object.freeze({
+  encodeSet: Object.freeze([ 0x20, 0x22, 0x23, 0x3C, 0x3E, 0x3F, 0x60, 0x7B, 0x7D ] as Array<uint8>),
+  spaceAsPlus: false,
+});
+
+const _URI_USERINFO_OPTIONS: _ResolvedOptions = Object.freeze({
+  encodeSet: Object.freeze([ 0x20, 0x22, 0x23, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D ] as Array<uint8>),
+  spaceAsPlus: false,
+});
+
+const _URI_COMPONENT_OPTIONS: _ResolvedOptions = Object.freeze({
+  encodeSet: Object.freeze([ 0x20, 0x22, 0x23, 0x24, 0x26, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D ] as Array<uint8>),
+  spaceAsPlus: false,
+});
+
+const _FORM_URLENCODED_OPTIONS: _ResolvedOptions = Object.freeze({
+  encodeSet: Object.freeze([ 0x20, 0x21, 0x22, 0x23, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D, 0x7E ] as Array<uint8>),
+  spaceAsPlus: true,
+});
+
+/**
+ * The predefined options.
+ */
+namespace PercentOptions {
+  /** The options for the C0 controls percent-encode */
+  export const C0: PercentOptions = _MIN_OPTIONS;
+  /** The options for the URL fragment percent-encode */
+  export const URI_FRAGMENT: PercentOptions = _URI_FRAGMENT_OPTIONS;
+  /** The options for the URL query percent-encode */
+  export const URI_QUERY: PercentOptions = _URI_QUERY_OPTIONS;
+  /** The options for the URL special-query percent-encode */
+  export const URI_SPECIAL_QUERY: PercentOptions = _URI_SPECIAL_QUERY_OPTIONS;
+  /** The options for the URL path percent-encode */
+  export const URI_PATH: PercentOptions = _URI_PATH_OPTIONS;
+  /** The options for the URL userinfo percent-encode */
+  export const URI_USERINFO: PercentOptions = _URI_USERINFO_OPTIONS;
+  /** The options for the URL component percent-encode */
+  export const URI_COMPONENT: PercentOptions = _URI_COMPONENT_OPTIONS;
+  /** The options for the application/x-www-form-urlencoded percent-encode */
+  export const FORM_URLENCODED: PercentOptions = _FORM_URLENCODED_OPTIONS;
+}
+
+/**
  * 文字列をバイト列にパーセント復号し、結果のバイト列を返却
  * 
  * {@link [URL Standard](https://url.spec.whatwg.org/#string-percent-decode)}の仕様に従った。
@@ -176,107 +343,6 @@ function _encode(toEncode: Uint8Array, options: _ResolvedOptions): string {
 }
 
 /**
- * 全バイトを"%XX"の形に符号化する用
- */
-const _ALL: Readonly<Array<uint8>> = Object.freeze([
-  0x20,
-  0x21,
-  0x22,
-  0x23,
-  0x24,
-  // 0x25, "%"は無条件で"%25"にする
-  0x26,
-  0x27,
-  0x28,
-  0x29,
-  0x2A,
-  0x2B,
-  0x2C,
-  0x2D,
-  0x2E,
-  0x2F,
-  0x30,
-  0x31,
-  0x32,
-  0x33,
-  0x34,
-  0x35,
-  0x36,
-  0x37,
-  0x38,
-  0x39,
-  0x3A,
-  0x3B,
-  0x3C,
-  0x3D,
-  0x3E,
-  0x3F,
-  0x40,
-  0x41,
-  0x42,
-  0x43,
-  0x44,
-  0x45,
-  0x46,
-  0x47,
-  0x48,
-  0x49,
-  0x4A,
-  0x4B,
-  0x4C,
-  0x4D,
-  0x4E,
-  0x4F,
-  0x50,
-  0x51,
-  0x52,
-  0x53,
-  0x54,
-  0x55,
-  0x56,
-  0x57,
-  0x58,
-  0x59,
-  0x5A,
-  0x5B,
-  0x5C,
-  0x5D,
-  0x5E,
-  0x5F,
-  0x60,
-  0x61,
-  0x62,
-  0x63,
-  0x64,
-  0x65,
-  0x66,
-  0x67,
-  0x68,
-  0x69,
-  0x6A,
-  0x6B,
-  0x6C,
-  0x6D,
-  0x6E,
-  0x6F,
-  0x70,
-  0x71,
-  0x72,
-  0x73,
-  0x74,
-  0x75,
-  0x76,
-  0x77,
-  0x78,
-  0x79,
-  0x7A,
-  0x7B,
-  0x7C,
-  0x7D,
-  0x7E,
-]);
-
-/**
  * オプションをResolvedOptions型に変換する
  * 未設定項目はデフォルト値で埋める
  * 
@@ -290,15 +356,12 @@ function _resolveOptions(options: PercentOptions | _ResolvedOptions = {}): _Reso
     encodeSet = Object.freeze([ ...options.encodeSet ]);
   }
   else {
-    encodeSet = _ALL;
+    encodeSet = _DEFAULT_OPTIONS.encodeSet;
   }
 
-  let spaceAsPlus: boolean;
+  let spaceAsPlus: boolean = _DEFAULT_OPTIONS.spaceAsPlus;
   if (typeof options.spaceAsPlus === "boolean") {
     spaceAsPlus = options.spaceAsPlus;
-  }
-  else {
-    spaceAsPlus = false;
   }
 
   if ((spaceAsPlus === true) && (encodeSet.includes(0x2B) !== true)) {
@@ -311,45 +374,10 @@ function _resolveOptions(options: PercentOptions | _ResolvedOptions = {}): _Reso
   });
 }
 
-interface Percent {
-  /**
-   * 
-   * 
-   * @param encoded 
-   * @param options 
-   * @returns
-   * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
-   * @throws {TypeError} The `encoded` is not Percent-encoded string.
-   */
-  decode(encoded: string, options?: PercentOptions): Uint8Array;
-
-  /**
-   * 
-   * @param toEncode 
-   * @param options 
-   * @returns
-   * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
-   */
-  encode(toEncode: Uint8Array, options?: PercentOptions): string;
-}
-
-const Percent = Object.freeze({
-  decode(encoded: string, options?: PercentOptions): Uint8Array {
-    const resolvedOptions = _resolveOptions(options);
-    return _decode(encoded, resolvedOptions);
-  },
-
-  encode(toEncode: Uint8Array, options?: PercentOptions): string {
-    const resolvedOptions = _resolveOptions(options);
-    return _encode(toEncode, resolvedOptions);
-  },
-}) as Percent;
-
 export {
-  type PercentOptions,
   type _ResolvedOptions,
   _decode,
   _encode,
   _resolveOptions,
-  Percent,
+  PercentOptions,
 };

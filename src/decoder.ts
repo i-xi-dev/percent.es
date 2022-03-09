@@ -5,7 +5,7 @@ import {
   SizedMap,
 } from "@i-xi-dev/fundamental";
 import {
-  type PercentOptions,
+  PercentOptions,
   type _ResolvedOptions,
   _decode,
   _resolveOptions,
