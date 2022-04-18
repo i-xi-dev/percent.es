@@ -2,7 +2,7 @@
 
 import {
   type uint8,
-  isArrayOfUint8,
+  Uint8Utils,
 } from "@i-xi-dev/fundamental";
 
 /**
@@ -159,131 +159,6 @@ const _DEFAULT_OPTIONS: _ResolvedOptions = Object.freeze({
   spaceAsPlus: false,
 });
 
-const _MIN_OPTIONS: _ResolvedOptions = Object.freeze({
-  encodeSet: Object.freeze([] as Array<uint8>),
-  spaceAsPlus: false,
-});
-
-const _URI_FRAGMENT_OPTIONS: _ResolvedOptions = Object.freeze({
-  encodeSet: Object.freeze([ 0x20, 0x22, 0x3C, 0x3E, 0x60 ] as Array<uint8>),
-  spaceAsPlus: false,
-});
-
-const _URI_QUERY_OPTIONS: _ResolvedOptions = Object.freeze({
-  encodeSet: Object.freeze([ 0x20, 0x22, 0x23, 0x3C, 0x3E ] as Array<uint8>),
-  spaceAsPlus: false,
-});
-
-const _URI_SPECIAL_QUERY_OPTIONS: _ResolvedOptions = Object.freeze({
-  encodeSet: Object.freeze([ 0x20, 0x22, 0x23, 0x27, 0x3C, 0x3E ] as Array<uint8>),
-  spaceAsPlus: false,
-});
-
-const _URI_PATH_OPTIONS: _ResolvedOptions = Object.freeze({
-  encodeSet: Object.freeze([ 0x20, 0x22, 0x23, 0x3C, 0x3E, 0x3F, 0x60, 0x7B, 0x7D ] as Array<uint8>),
-  spaceAsPlus: false,
-});
-
-const _URI_USERINFO_OPTIONS: _ResolvedOptions = Object.freeze({
-  encodeSet: Object.freeze([ 0x20, 0x22, 0x23, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D ] as Array<uint8>),
-  spaceAsPlus: false,
-});
-
-const _URI_COMPONENT_OPTIONS: _ResolvedOptions = Object.freeze({
-  encodeSet: Object.freeze([ 0x20, 0x22, 0x23, 0x24, 0x26, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D ] as Array<uint8>),
-  spaceAsPlus: false,
-});
-
-const _FORM_URLENCODED_OPTIONS: _ResolvedOptions = Object.freeze({
-  encodeSet: Object.freeze([ 0x20, 0x21, 0x22, 0x23, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D, 0x7E ] as Array<uint8>),
-  spaceAsPlus: true,
-});
-
-/**
- * The predefined options.
- */
-namespace PercentOptions {
-  /**
-   * The options for the C0 controls percent-encode
-   * 
-   * | field | value |
-   * | :--- | :--- |
-   * | `encodeSet` | `[]` |
-   * | `spaceAsPlus` | `false` |
-   */
-  export const C0: PercentOptions = _MIN_OPTIONS;
-
-  /**
-   * The options for the URL fragment percent-encode
-   * 
-   * | field | value |
-   * | :--- | :--- |
-   * | `encodeSet` | `[ 0x20, 0x22, 0x3C, 0x3E, 0x60 ]` |
-   * | `spaceAsPlus` | `false` |
-   */
-  export const URI_FRAGMENT: PercentOptions = _URI_FRAGMENT_OPTIONS;
-
-  /**
-   * The options for the URL query percent-encode
-   * 
-   * | field | value |
-   * | :--- | :--- |
-   * | `encodeSet` | `[ 0x20, 0x22, 0x23, 0x3C, 0x3E ]` |
-   * | `spaceAsPlus` | `false` |
-   */
-  export const URI_QUERY: PercentOptions = _URI_QUERY_OPTIONS;
-
-  /**
-   * The options for the URL special-query percent-encode
-   * 
-   * | field | value |
-   * | :--- | :--- |
-   * | `encodeSet` | `[ 0x20, 0x22, 0x23, 0x27, 0x3C, 0x3E ]` |
-   * | `spaceAsPlus` | `false` |
-   */
-  export const URI_SPECIAL_QUERY: PercentOptions = _URI_SPECIAL_QUERY_OPTIONS;
-
-  /**
-   * The options for the URL path percent-encode
-   * 
-   * | field | value |
-   * | :--- | :--- |
-   * | `encodeSet` | `[ 0x20, 0x22, 0x23, 0x3C, 0x3E, 0x3F, 0x60, 0x7B, 0x7D ]` |
-   * | `spaceAsPlus` | `false` |
-   */
-  export const URI_PATH: PercentOptions = _URI_PATH_OPTIONS;
-
-  /**
-   * The options for the URL userinfo percent-encode
-   * 
-   * | field | value |
-   * | :--- | :--- |
-   * | `encodeSet` | `[ 0x20, 0x22, 0x23, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D ]` |
-   * | `spaceAsPlus` | `false` |
-   */
-  export const URI_USERINFO: PercentOptions = _URI_USERINFO_OPTIONS;
-
-  /**
-   * The options for the URL component percent-encode
-   * 
-   * | field | value |
-   * | :--- | :--- |
-   * | `encodeSet` | `[ 0x20, 0x22, 0x23, 0x24, 0x26, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D ]` |
-   * | `spaceAsPlus` | `false` |
-   */
-  export const URI_COMPONENT: PercentOptions = _URI_COMPONENT_OPTIONS;
-
-  /**
-   * The options for the application/x-www-form-urlencoded percent-encode
-   * 
-   * | field | value |
-   * | :--- | :--- |
-   * | `encodeSet` | `[ 0x20, 0x21, 0x22, 0x23, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D, 0x7E ]` |
-   * | `spaceAsPlus` | `true` |
-   */
-  export const FORM_URLENCODED: PercentOptions = _FORM_URLENCODED_OPTIONS;
-}
-
 /**
  * 文字列をバイト列にパーセント復号し、結果のバイト列を返却
  * 
@@ -417,7 +292,7 @@ function _encode(toEncode: Uint8Array, options: _ResolvedOptions): string {
  */
 function _resolveOptions(options: PercentOptions | _ResolvedOptions = {}): _ResolvedOptions {
   let encodeSet: Readonly<Array<uint8>>;
-  if (isArrayOfUint8(options.encodeSet)) {
+  if (Uint8Utils.isArrayOfUint8(options.encodeSet)) {
     encodeSet = Object.freeze([ ...options.encodeSet ]);
   }
   else {

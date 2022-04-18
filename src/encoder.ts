@@ -1,7 +1,7 @@
 //
 
 import {
-  type ByteEncoder,
+  type ByteEncoding,
   SizedMap,
 } from "@i-xi-dev/fundamental";
 import {
@@ -14,7 +14,7 @@ import {
 /**
  * Percent encoder
  */
-class PercentEncoder implements ByteEncoder {
+class PercentEncoder implements ByteEncoding.Encoder {
   /**
    * インスタンスのキャッシュ
    * static getで使用
