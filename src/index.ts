@@ -1,6 +1,10 @@
 //
 
-import { type uint8 } from "@i-xi-dev/fundamental";
+import {
+  type uint8,
+  type ByteEncoding,
+  SizedMap,
+} from "@i-xi-dev/fundamental";
 import {
   type _ResolvedOptions,
   PercentOptions,
@@ -8,8 +12,6 @@ import {
   _encode,
   _resolveOptions,
 } from "./percent";
-import { PercentDecoder } from "./decoder";
-import { PercentEncoder } from "./encoder";
 
 const _MIN_OPTIONS: _ResolvedOptions = Object.freeze({
   encodeSet: Object.freeze([] as Array<uint8>),
@@ -165,9 +167,117 @@ namespace PercentEncoding {
     export const FORM_URLENCODED: Options = _FORM_URLENCODED_OPTIONS;
   }
 
-  export const Decoder = PercentDecoder;
+  /**
+   * Percent decoder
+   */
+   export class Decoder implements ByteEncoding.Decoder {
+     /**
+     * インスタンスのキャッシュ
+     * static getで使用
+     */
+     static #pool: SizedMap<string, Decoder> = new SizedMap(2);
 
-  export const Encoder = PercentEncoder;
+     /**
+     * 未設定項目を埋めたオプション
+     */
+     #options: _ResolvedOptions;
+
+     /**
+     * @param options - The `PercentOptions` dictionary.
+     * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
+     */
+     constructor(options?: PercentOptions) {
+       this.#options = _resolveOptions(options);
+       Object.freeze(this);
+     }
+
+     /**
+     * Decodes a Percent-encoded string into an `Uint8Array`.
+     * 
+     * @param encoded - The string to decode.
+     * @returns An `Uint8Array` containing the decoded bytes.
+     * @throws {TypeError} The `encoded` is not Percent-encoded string.
+     */
+     decode(encoded: string): Uint8Array {
+       return _decode(encoded, this.#options);
+     }
+
+     /**
+     * 
+     * @param options 
+     * @returns 
+     * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
+     */
+     static get(options?: PercentOptions): Decoder {
+       const resolvedOptions = _resolveOptions(options);
+
+       const poolKey = JSON.stringify(resolvedOptions);
+       let decoder = Decoder.#pool.get(poolKey);
+       if (decoder) {
+         return decoder;
+       }
+       decoder = new Decoder(resolvedOptions);
+       Decoder.#pool.set(poolKey, decoder);
+       return decoder;
+     }
+   }
+  Object.freeze(Decoder);
+
+  /**
+   * Percent encoder
+   */
+  export class Encoder implements ByteEncoding.Encoder {
+    /**
+     * インスタンスのキャッシュ
+     * static getで使用
+     */
+    static #pool: SizedMap<string, Encoder> = new SizedMap(2);
+
+    /**
+     * 未設定項目を埋めたオプション
+     */
+    #options: _ResolvedOptions;
+
+    /**
+     * @param options - The `PercentOptions` dictionary.
+     * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
+     */
+    constructor(options?: PercentOptions) {
+      this.#options = _resolveOptions(options);
+      Object.freeze(this);
+    }
+
+    /**
+     * Encodes the specified bytes into a string.
+     * 
+     * @param toEncode - The bytes to encode.
+     * @returns A string containing the Percent-encoded characters.
+     */
+    encode(toEncode: Uint8Array): string {
+      return _encode(toEncode, this.#options);
+    }
+
+    /**
+     * 
+     * @param options 
+     * @returns 
+     * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
+     */
+    static get(options?: PercentOptions): Encoder {
+      const resolvedOptions = _resolveOptions(options);
+
+      const poolKey = JSON.stringify(resolvedOptions);
+      let encoder = Encoder.#pool.get(poolKey);
+      if (encoder) {
+        return encoder;
+      }
+      encoder = new Encoder(resolvedOptions);
+      Encoder.#pool.set(poolKey, encoder);
+      return encoder;
+    }
+  }
+  Object.freeze(Encoder);
+
 }
 Object.freeze(PercentEncoding);
 
