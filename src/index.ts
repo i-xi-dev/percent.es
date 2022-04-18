@@ -467,6 +467,7 @@ namespace PercentEncoding {
      */
     export const FORM_URLENCODED: Options = _FORM_URLENCODED_OPTIONS;
   }
+  Object.freeze(Options);
 
   /**
    * Percent decoder
