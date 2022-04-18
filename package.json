@@ -1,6 +1,6 @@
 {
   "name": "@i-xi-dev/percent",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "This is not for direct usage.",
   "type": "module",
   "main": "./dist/index.js",
