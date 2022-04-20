@@ -1,5 +1,5 @@
 import { expect } from '@esm-bundle/chai';
-import { PercentEncoding } from "../../dist/index.js";
+import { Percent } from "../../dist/index.js";
 
 const utf8 = new TextEncoder();
 const utf8Bytes1 = utf8.encode("1\u{0} !~\u{7F}あ+");
@@ -35,9 +35,9 @@ const x2 = Uint8Array.of(
 const x2b = Array.from(x2, (i)=>String.fromCharCode(i)).join("");
 const x2bUtf8 = new TextEncoder().encode(x2b);
 
-describe("PercentEncoding.Encoder.prototype.encode", () => {
-  it("PercentEncoding.Encoder()/encode", () => {
-    const encoder = new PercentEncoding.Encoder();
+describe("Percent.Encoder.prototype.encode", () => {
+  it("Percent.Encoder()/encode", () => {
+    const encoder = new Percent.Encoder();
 
     expect(encoder.encode(Uint8Array.of())).to.equal("");
     expect(encoder.encode(Uint8Array.of(3,2,1,0,0xFF,0xFE,0xFD,0xFC))).to.equal("%03%02%01%00%FF%FE%FD%FC");
@@ -49,8 +49,8 @@ describe("PercentEncoding.Encoder.prototype.encode", () => {
 
   });
 
-  it("PercentEncoding.Encoder({encodeSet:[]})/encode", () => {
-    const encoder = new PercentEncoding.Encoder({encodeSet:[]});
+  it("Percent.Encoder({encodeSet:[]})/encode", () => {
+    const encoder = new Percent.Encoder({encodeSet:[]});
 
     expect(encoder.encode(Uint8Array.of())).to.equal("");
     expect(encoder.encode(Uint8Array.of(3,2,1,0,0xFF,0xFE,0xFD,0xFC))).to.equal("%03%02%01%00%FF%FE%FD%FC");
@@ -62,16 +62,16 @@ describe("PercentEncoding.Encoder.prototype.encode", () => {
 
   });
 
-  it("PercentEncoding.Encoder({encodeSet:[...]})/encode", () => {
-    const encoder = new PercentEncoding.Encoder({encodeSet:[ 0x20, 0x22, 0x3C, 0x3E, 0x60 ]});
+  it("Percent.Encoder({encodeSet:[...]})/encode", () => {
+    const encoder = new Percent.Encoder({encodeSet:[ 0x20, 0x22, 0x3C, 0x3E, 0x60 ]});
 
     expect(encoder.encode(Uint8Array.of())).to.equal("");
     expect(encoder.encode(utf8Bytes1)).to.equal("1%00%20!~%7F%E3%81%82+");
 
   });
 
-  it("PercentEncoding.Encoder({encodeSet:[...]})/encode", () => {
-    const encoder = new PercentEncoding.Encoder({encodeSet:[ 0x20, 0x22, 0x23, 0x24, 0x26, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D ]});
+  it("Percent.Encoder({encodeSet:[...]})/encode", () => {
+    const encoder = new Percent.Encoder({encodeSet:[ 0x20, 0x22, 0x23, 0x24, 0x26, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D ]});
 
     expect(encoder.encode(Uint8Array.of())).to.equal("");
     expect(encoder.encode(utf8Bytes1)).to.equal("1%00%20!~%7F%E3%81%82%2B");
@@ -102,8 +102,8 @@ describe("PercentEncoding.Encoder.prototype.encode", () => {
 
   });
 
-  it("PercentEncoding.Encoder({encodeSet:[...],spaceAsPlus:true})/encode", () => {
-    const encoder = new PercentEncoding.Encoder({encodeSet:[ 0x20, 0x21, 0x22, 0x23, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D, 0x7E ],spaceAsPlus:true});
+  it("Percent.Encoder({encodeSet:[...],spaceAsPlus:true})/encode", () => {
+    const encoder = new Percent.Encoder({encodeSet:[ 0x20, 0x21, 0x22, 0x23, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D, 0x7E ],spaceAsPlus:true});
 
     expect(encoder.encode(Uint8Array.of())).to.equal("");
     expect(encoder.encode(utf8Bytes1)).to.equal("1%00+%21%7E%7F%E3%81%82%2B");
@@ -121,10 +121,10 @@ describe("PercentEncoding.Encoder.prototype.encode", () => {
 
   });
 
-  it("PercentEncoding.Encoder({encodeSet:[],spaceAsPlus:true})/encode", () => {
+  it("Percent.Encoder({encodeSet:[],spaceAsPlus:true})/encode", () => {
 
     expect(() => {
-      const encoder = new PercentEncoding.Encoder({encodeSet:[],spaceAsPlus:true});
+      const encoder = new Percent.Encoder({encodeSet:[],spaceAsPlus:true});
       encoder.encode(Uint8Array.of());
     }).to.throw(RangeError, "options.encodeSet, options.spaceAsPlus").with.property("name", "RangeError");
 
@@ -132,9 +132,9 @@ describe("PercentEncoding.Encoder.prototype.encode", () => {
 
 });
 
-describe("PercentEncoding.Encoder.get", () => {
+describe("Percent.Encoder.get", () => {
   it("get()", () => {
-    const encoder = PercentEncoding.Encoder.get();
+    const encoder = Percent.Encoder.get();
 
     expect(encoder.encode(Uint8Array.of())).to.equal("");
     expect(encoder.encode(Uint8Array.of(3,2,1,0,0xFF,0xFE,0xFD,0xFC))).to.equal("%03%02%01%00%FF%FE%FD%FC");
@@ -142,12 +142,12 @@ describe("PercentEncoding.Encoder.get", () => {
   });
 
   it("get(Object)", () => {
-    const encoder1 = PercentEncoding.Encoder.get({spaceAsPlus:true});
-    const encoder2 = PercentEncoding.Encoder.get({spaceAsPlus:false});
+    const encoder1 = Percent.Encoder.get({spaceAsPlus:true});
+    const encoder2 = Percent.Encoder.get({spaceAsPlus:false});
     expect(encoder1).to.not.equal(encoder2);
 
-    const encoder21 = PercentEncoding.Encoder.get({spaceAsPlus:false});
-    const encoder22 = PercentEncoding.Encoder.get({spaceAsPlus:false});
+    const encoder21 = Percent.Encoder.get({spaceAsPlus:false});
+    const encoder22 = Percent.Encoder.get({spaceAsPlus:false});
     expect(encoder21).to.equal(encoder22);
 
   });

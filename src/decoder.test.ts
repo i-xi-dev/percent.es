@@ -1,12 +1,12 @@
 import { expect } from '@esm-bundle/chai';
-import { PercentEncoding } from "./index";
+import { Percent } from "./index";
 
 const utf8 = new TextEncoder();
 const utf8Bytes1 = utf8.encode("1\u{0} !~\u{7F}あ+");
 
-describe("PercentEncoding.Decoder.prototype.decode", () => {
-  it("PercentEncoding.Decoder()/decode", () => {
-    const decoder = new PercentEncoding.Decoder();
+describe("Percent.Decoder.prototype.decode", () => {
+  it("Percent.Decoder()/decode", () => {
+    const decoder = new Percent.Decoder();
 
     const decoded11 = decoder.decode("");
     expect(JSON.stringify([...decoded11])).to.equal("[]");
@@ -58,8 +58,8 @@ describe("PercentEncoding.Decoder.prototype.decode", () => {
 
   });
 
-  it("PercentEncoding.Decoder({spaceAsPlus:true})/decode", () => {
-    const decoder = new PercentEncoding.Decoder({spaceAsPlus:true});
+  it("Percent.Decoder({spaceAsPlus:true})/decode", () => {
+    const decoder = new Percent.Decoder({spaceAsPlus:true});
 
     const decoded11 = decoder.decode("");
     expect(JSON.stringify([...decoded11])).to.equal("[]");
@@ -88,8 +88,8 @@ describe("PercentEncoding.Decoder.prototype.decode", () => {
 
   });
 
-  it("PercentEncoding.Decoder({encodeSet:[...]})/decode", () => {
-    const decoder = new PercentEncoding.Decoder({encodeSet:[ 0x20, 0x21, 0x22, 0x23, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D, 0x7E ]});
+  it("Percent.Decoder({encodeSet:[...]})/decode", () => {
+    const decoder = new Percent.Decoder({encodeSet:[ 0x20, 0x21, 0x22, 0x23, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D, 0x7E ]});
 
     const decoded11 = decoder.decode("");
     expect(JSON.stringify([...decoded11])).to.equal("[]");
@@ -143,9 +143,9 @@ describe("PercentEncoding.Decoder.prototype.decode", () => {
 
 });
 
-describe("PercentEncoding.Decoder.get", () => {
+describe("Percent.Decoder.get", () => {
   it("get()", () => {
-    const decoder = PercentEncoding.Decoder.get();
+    const decoder = Percent.Decoder.get();
 
     const decoded11 = decoder.decode("");
     expect(JSON.stringify([...decoded11])).to.equal("[]");
@@ -156,12 +156,12 @@ describe("PercentEncoding.Decoder.get", () => {
   });
 
   it("get(Object)", () => {
-    const decoder1 = PercentEncoding.Decoder.get({spaceAsPlus:true});
-    const decoder2 = PercentEncoding.Decoder.get({spaceAsPlus:false});
+    const decoder1 = Percent.Decoder.get({spaceAsPlus:true});
+    const decoder2 = Percent.Decoder.get({spaceAsPlus:false});
     expect(decoder1).to.not.equal(decoder2);
 
-    const decoder21 = PercentEncoding.Decoder.get({spaceAsPlus:false});
-    const decoder22 = PercentEncoding.Decoder.get({spaceAsPlus:false});
+    const decoder21 = Percent.Decoder.get({spaceAsPlus:false});
+    const decoder22 = Percent.Decoder.get({spaceAsPlus:false});
     expect(decoder21).to.equal(decoder22);
 
   });

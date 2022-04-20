@@ -298,14 +298,14 @@ function _encode(toEncode: Uint8Array, options: _ResolvedOptions): string {
 }
 
 /**
- * オプションをResolvedOptions型に変換する
+ * オプションを_ResolvedOptions型に変換する
  * 未設定項目はデフォルト値で埋める
  * 
  * @param options オプション
  * @returns 未設定項目を埋めたオプションの複製
  * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
  */
-function _resolveOptions(options: PercentEncoding.Options | _ResolvedOptions = {}): _ResolvedOptions {
+function _resolveOptions(options: Percent.Options | _ResolvedOptions = {}): _ResolvedOptions {
   let encodeSet: Readonly<Array<uint8>>;
   if (Uint8Utils.isArrayOfUint8(options.encodeSet)) {
     encodeSet = Object.freeze([ ...options.encodeSet ]);
@@ -329,13 +329,13 @@ function _resolveOptions(options: PercentEncoding.Options | _ResolvedOptions = {
   });
 }
 
-namespace PercentEncoding {
+namespace Percent {
   /**
+   * Decodes a Percent-encoded string into an `Uint8Array`.
    * 
-   * 
-   * @param encoded 
-   * @param options 
-   * @returns
+   * @param encoded The string to decode.
+   * @param options The `Percent.Options` dictionary.
+   * @returns An `Uint8Array` containing the decoded byte sequence.
    * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
    * @throws {TypeError} The `encoded` is not Percent-encoded string.
    */
@@ -345,10 +345,11 @@ namespace PercentEncoding {
   }
 
   /**
+   * Encodes the specified byte sequence into a string.
    * 
-   * @param toEncode 
-   * @param options 
-   * @returns
+   * @param toEncode The byte sequence to encode.
+   * @param options The `Percent.Options` dictionary.
+   * @returns A string containing the Percent-encoded characters.
    * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
    */
   export function encode(toEncode: Uint8Array, options?: Options): string {
@@ -375,17 +376,12 @@ namespace PercentEncoding {
      * Whether to output 0x20 as `"+"`.
      * The default is `false`.
      * 
-     * 
-     * 
      * The following restrictions apply:
      * - If `true`, `encodeSet` must contain `0x2B`.
      */
     spaceAsPlus?: boolean,
   };
 
-  /**
-   * The predefined options.
-   */
   export namespace Options {
     /**
      * The options for the C0 controls percent-encode
@@ -472,57 +468,58 @@ namespace PercentEncoding {
   /**
    * Percent decoder
    */
-   export class Decoder implements ByteEncoding.Decoder {
-     /**
+  export class Decoder implements ByteEncoding.Decoder {
+    /**
      * インスタンスのキャッシュ
      * static getで使用
      */
-     static #pool: SizedMap<string, Decoder> = new SizedMap(2);
+    static #pool: SizedMap<string, Decoder> = new SizedMap(2);
 
-     /**
+    /**
      * 未設定項目を埋めたオプション
      */
-     #options: _ResolvedOptions;
+    #options: _ResolvedOptions;
 
-     /**
-     * @param options - The `Percent.Options` dictionary.
+    /**
+     * @param options The `Percent.Options` dictionary.
      * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
      */
-     constructor(options?: Options) {
-       this.#options = _resolveOptions(options);
-       Object.freeze(this);
-     }
+    constructor(options?: Options) {
+      this.#options = _resolveOptions(options);
+      Object.freeze(this);
+    }
 
-     /**
+    /**
      * Decodes a Percent-encoded string into an `Uint8Array`.
      * 
-     * @param encoded - The string to decode.
-     * @returns An `Uint8Array` containing the decoded bytes.
+     * @param encoded The string to decode.
+     * @returns An `Uint8Array` containing the decoded byte sequence.
      * @throws {TypeError} The `encoded` is not Percent-encoded string.
      */
-     decode(encoded: string): Uint8Array {
-       return _decode(encoded, this.#options);
-     }
+    decode(encoded: string): Uint8Array {
+      return _decode(encoded, this.#options);
+    }
 
-     /**
+    /**
+     * Returns a `Percent.Decoder` object.
      * 
-     * @param options 
-     * @returns 
+     * @param options The `Percent.Options` dictionary.
+     * @returns An instance of `Percent.Decoder`.
      * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
      */
-     static get(options?: Options): Decoder {
-       const resolvedOptions = _resolveOptions(options);
+    static get(options?: Options): Decoder {
+      const resolvedOptions = _resolveOptions(options);
 
-       const poolKey = JSON.stringify(resolvedOptions);
-       let decoder = Decoder.#pool.get(poolKey);
-       if (decoder) {
-         return decoder;
-       }
-       decoder = new Decoder(resolvedOptions);
-       Decoder.#pool.set(poolKey, decoder);
-       return decoder;
-     }
-   }
+      const poolKey = JSON.stringify(resolvedOptions);
+      let decoder = Decoder.#pool.get(poolKey);
+      if (decoder) {
+        return decoder;
+      }
+      decoder = new Decoder(resolvedOptions);
+      Decoder.#pool.set(poolKey, decoder);
+      return decoder;
+    }
+  }
   Object.freeze(Decoder);
 
   /**
@@ -541,7 +538,7 @@ namespace PercentEncoding {
     #options: _ResolvedOptions;
 
     /**
-     * @param options - The `Percent.Options` dictionary.
+     * @param options The `Percent.Options` dictionary.
      * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
      */
     constructor(options?: Options) {
@@ -550,9 +547,9 @@ namespace PercentEncoding {
     }
 
     /**
-     * Encodes the specified bytes into a string.
+     * Encodes the specified byte sequence into a string.
      * 
-     * @param toEncode - The bytes to encode.
+     * @param toEncode The byte sequence to encode.
      * @returns A string containing the Percent-encoded characters.
      */
     encode(toEncode: Uint8Array): string {
@@ -560,9 +557,10 @@ namespace PercentEncoding {
     }
 
     /**
+     * Returns a `Percent.Encoder` object.
      * 
-     * @param options 
-     * @returns 
+     * @param options The `Percent.Options` dictionary.
+     * @returns An instance of `Percent.Encoder`.
      * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
      */
     static get(options?: Options): Encoder {
@@ -581,8 +579,8 @@ namespace PercentEncoding {
   Object.freeze(Encoder);
 
 }
-Object.freeze(PercentEncoding);
+Object.freeze(Percent);
 
 export {
-  PercentEncoding,
+  Percent,
 };
