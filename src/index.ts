@@ -330,6 +330,8 @@ function _resolveOptions(options: Percent.Options | _ResolvedOptions = {}): _Res
 }
 
 namespace Percent {
+  // デコード結果が文字符号化した結果のバイト列かどうかには関知しない
+  // URLのパーセントデコードを実施したい場合は、戻り値をUTF-8デコードする必要がある
   /**
    * Decodes a Percent-encoded string into an `Uint8Array`.
    * 
@@ -338,12 +340,23 @@ namespace Percent {
    * @returns An `Uint8Array` containing the decoded byte sequence.
    * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
    * @throws {TypeError} The `encoded` is not Percent-encoded string.
+   * @example
+   * ```javascript
+   * Percent.decode("%61%62%00%FF");
+   * // → Uint8Array[ 0x61, 0x62, 0x0, 0xFF ]
+   * 
+   * Percent.decode("ab%00%FF");
+   * // → Uint8Array[ 0x61, 0x62, 0x0, 0xFF ]
+   * ```
    */
   export function decode(encoded: string, options?: Options): Uint8Array {
     const resolvedOptions = _resolveOptions(options);
     return _decode(encoded, resolvedOptions);
   }
 
+  // toEncodeが文字符号化した結果のバイト列かどうかには関知しない
+  // URLのパーセントエンコードを実施したい場合は、toEncodeには、UTF-8エンコードした結果のバイト列を渡す必要がある
+  // （@exampleの例の2つ目だと"ab%00%C3%BF"にはならない）
   /**
    * Encodes the specified byte sequence into a string.
    * 
@@ -351,6 +364,14 @@ namespace Percent {
    * @param options The `Percent.Options` dictionary.
    * @returns A string containing the Percent-encoded characters.
    * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
+   * @example
+   * ```javascript
+   * Percent.encode(Uint8Array.of(0x61, 0x62, 0x0, 0xFF));
+   * // → "%61%62%00%FF"
+   * 
+   * Percent.encode(Uint8Array.of(0x61, 0x62, 0x0, 0xFF), Percent.Options.URI_COMPONENT);
+   * // → "ab%00%FF"
+   * ```
    */
   export function encode(toEncode: Uint8Array, options?: Options): string {
     const resolvedOptions = _resolveOptions(options);
