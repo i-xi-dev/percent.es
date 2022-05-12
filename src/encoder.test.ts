@@ -131,25 +131,3 @@ describe("Percent.Encoder.prototype.encode", () => {
   });
 
 });
-
-describe("Percent.Encoder.get", () => {
-  it("get()", () => {
-    const encoder = Percent.Encoder.get();
-
-    expect(encoder.encode(Uint8Array.of())).to.equal("");
-    expect(encoder.encode(Uint8Array.of(3,2,1,0,0xFF,0xFE,0xFD,0xFC))).to.equal("%03%02%01%00%FF%FE%FD%FC");
-
-  });
-
-  it("get(Object)", () => {
-    const encoder1 = Percent.Encoder.get({spaceAsPlus:true});
-    const encoder2 = Percent.Encoder.get({spaceAsPlus:false});
-    expect(encoder1).to.not.equal(encoder2);
-
-    const encoder21 = Percent.Encoder.get({spaceAsPlus:false});
-    const encoder22 = Percent.Encoder.get({spaceAsPlus:false});
-    expect(encoder21).to.equal(encoder22);
-
-  });
-
-});

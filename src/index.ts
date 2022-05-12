@@ -3,8 +3,7 @@
 import {
   type uint8,
   type ByteEncoding,
-  SizedMap,
-  Uint8Utils,
+  Byte,
 } from "@i-xi-dev/fundamental";
 
 /**
@@ -307,8 +306,8 @@ function _encode(toEncode: Uint8Array, options: _ResolvedOptions): string {
  */
 function _resolveOptions(options: Percent.Options | _ResolvedOptions = {}): _ResolvedOptions {
   let encodeSet: Readonly<Array<uint8>>;
-  if (Uint8Utils.isArrayOfUint8(options.encodeSet)) {
-    encodeSet = Object.freeze([ ...options.encodeSet ]);
+  if (Array.isArray(options.encodeSet) && options.encodeSet.every((i) => Byte.isUint8(i))) {
+    encodeSet = Object.freeze([ ...(options.encodeSet as uint8[]) ]);
   }
   else {
     encodeSet = _DEFAULT_OPTIONS.encodeSet;
@@ -491,12 +490,6 @@ namespace Percent {
    */
   export class Decoder implements ByteEncoding.Decoder {
     /**
-     * インスタンスのキャッシュ
-     * static getで使用
-     */
-    static #pool: SizedMap<string, Decoder> = new SizedMap(2);
-
-    /**
      * 未設定項目を埋めたオプション
      */
     #options: _ResolvedOptions;
@@ -520,26 +513,6 @@ namespace Percent {
     decode(encoded: string): Uint8Array {
       return _decode(encoded, this.#options);
     }
-
-    /**
-     * Returns a `Percent.Decoder` object.
-     * 
-     * @param options The `Percent.Options` dictionary.
-     * @returns An instance of `Percent.Decoder`.
-     * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
-     */
-    static get(options?: Options): Decoder {
-      const resolvedOptions = _resolveOptions(options);
-
-      const poolKey = JSON.stringify(resolvedOptions);
-      let decoder = Decoder.#pool.get(poolKey);
-      if (decoder) {
-        return decoder;
-      }
-      decoder = new Decoder(resolvedOptions);
-      Decoder.#pool.set(poolKey, decoder);
-      return decoder;
-    }
   }
   Object.freeze(Decoder);
 
@@ -547,12 +520,6 @@ namespace Percent {
    * Percent encoder
    */
   export class Encoder implements ByteEncoding.Encoder {
-    /**
-     * インスタンスのキャッシュ
-     * static getで使用
-     */
-    static #pool: SizedMap<string, Encoder> = new SizedMap(2);
-
     /**
      * 未設定項目を埋めたオプション
      */
@@ -575,26 +542,6 @@ namespace Percent {
      */
     encode(toEncode: Uint8Array): string {
       return _encode(toEncode, this.#options);
-    }
-
-    /**
-     * Returns a `Percent.Encoder` object.
-     * 
-     * @param options The `Percent.Options` dictionary.
-     * @returns An instance of `Percent.Encoder`.
-     * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
-     */
-    static get(options?: Options): Encoder {
-      const resolvedOptions = _resolveOptions(options);
-
-      const poolKey = JSON.stringify(resolvedOptions);
-      let encoder = Encoder.#pool.get(poolKey);
-      if (encoder) {
-        return encoder;
-      }
-      encoder = new Encoder(resolvedOptions);
-      Encoder.#pool.set(poolKey, encoder);
-      return encoder;
     }
   }
   Object.freeze(Encoder);

@@ -142,28 +142,3 @@ describe("Percent.Decoder.prototype.decode", () => {
   });
 
 });
-
-describe("Percent.Decoder.get", () => {
-  it("get()", () => {
-    const decoder = Percent.Decoder.get();
-
-    const decoded11 = decoder.decode("");
-    expect(JSON.stringify([...decoded11])).to.equal("[]");
-
-    const decoded12 = decoder.decode("%03%02%01%00%FF%FE%FD%FC");
-    expect(JSON.stringify([...decoded12])).to.equal("[3,2,1,0,255,254,253,252]");
-
-  });
-
-  it("get(Object)", () => {
-    const decoder1 = Percent.Decoder.get({spaceAsPlus:true});
-    const decoder2 = Percent.Decoder.get({spaceAsPlus:false});
-    expect(decoder1).to.not.equal(decoder2);
-
-    const decoder21 = Percent.Decoder.get({spaceAsPlus:false});
-    const decoder22 = Percent.Decoder.get({spaceAsPlus:false});
-    expect(decoder21).to.equal(decoder22);
-
-  });
-
-});
