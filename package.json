@@ -1,6 +1,6 @@
 {
   "name": "@i-xi-dev/percent",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "This is not for direct usage.",
   "type": "module",
   "main": "./dist/index.js",
@@ -55,6 +55,7 @@
     "mocha": "^10.0.0",
     "ts-jest": "^28.0.2",
     "ts-loader": "^9.3.0",
+    "typedoc": "^0.22.15",
     "typescript": "^4.6.4",
     "webpack": "^5.72.1",
     "webpack-cli": "^4.9.2"
