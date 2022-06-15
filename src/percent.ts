@@ -2,9 +2,9 @@
 
 import {
   Byte,
-  type ByteEncoding,
+  // type ByteEncoding,
   type uint8,
-} from "https://github.com/i-xi-dev/fundamental.es/raw/main/mod.ts";
+} from "i-xi-dev/fundamental.es/byte";
 
 /**
  * 未設定項目の存在しないオプション
@@ -573,7 +573,7 @@ namespace Percent {
   /**
    * Percent decoder
    */
-  export class Decoder implements ByteEncoding.Decoder {
+  export class Decoder /* implements ByteEncoding.Decoder */ {
     /**
      * 未設定項目を埋めたオプション
      */
@@ -604,7 +604,7 @@ namespace Percent {
   /**
    * Percent encoder
    */
-  export class Encoder implements ByteEncoding.Encoder {
+  export class Encoder /* implements ByteEncoding.Encoder */ {
     /**
      * 未設定項目を埋めたオプション
      */
