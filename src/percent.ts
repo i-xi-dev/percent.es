@@ -1,10 +1,10 @@
 //
 
 import {
-  type uint8,
-  type ByteEncoding,
   Byte,
-} from "@i-xi-dev/fundamental";
+  type ByteEncoding,
+  type uint8,
+} from "https://github.com/i-xi-dev/fundamental.es/raw/main/mod.ts";
 
 /**
  * 未設定項目の存在しないオプション
@@ -13,19 +13,19 @@ type _ResolvedOptions = {
   /**
    * 0x00-0x1F,0x25,0x7F-0xFF以外に"%XX"への変換対象とするバイトのセット
    */
-  encodeSet: Readonly<Array<uint8>>,
+  encodeSet: Readonly<Array<uint8>>;
 
   /**
    * 復号時:
    *    "+"を0x20に復号するか否か
-   * 
+   *
    * 符号化時:
    *    encodeSetに0x20が含まれているときに、0x20を"+"に符号化するか否か
    *    encodeSetに0x20が含まれていなければ無視する
-   * 
+   *
    * trueにするときは、encodeSetに"+"(0x2B)が含まれている必要がある
    */
-  spaceAsPlus: boolean,
+  spaceAsPlus: boolean;
 };
 
 /**
@@ -139,45 +139,128 @@ const _MIN_OPTIONS: _ResolvedOptions = Object.freeze({
 });
 
 const _URI_FRAGMENT_OPTIONS: _ResolvedOptions = Object.freeze({
-  encodeSet: Object.freeze([ 0x20, 0x22, 0x3C, 0x3E, 0x60 ] as Array<uint8>),
+  encodeSet: Object.freeze([0x20, 0x22, 0x3C, 0x3E, 0x60] as Array<uint8>),
   spaceAsPlus: false,
 });
 
 const _URI_QUERY_OPTIONS: _ResolvedOptions = Object.freeze({
-  encodeSet: Object.freeze([ 0x20, 0x22, 0x23, 0x3C, 0x3E ] as Array<uint8>),
+  encodeSet: Object.freeze([0x20, 0x22, 0x23, 0x3C, 0x3E] as Array<uint8>),
   spaceAsPlus: false,
 });
 
 const _URI_SPECIAL_QUERY_OPTIONS: _ResolvedOptions = Object.freeze({
-  encodeSet: Object.freeze([ 0x20, 0x22, 0x23, 0x27, 0x3C, 0x3E ] as Array<uint8>),
+  encodeSet: Object.freeze(
+    [0x20, 0x22, 0x23, 0x27, 0x3C, 0x3E] as Array<uint8>,
+  ),
   spaceAsPlus: false,
 });
 
 const _URI_PATH_OPTIONS: _ResolvedOptions = Object.freeze({
-  encodeSet: Object.freeze([ 0x20, 0x22, 0x23, 0x3C, 0x3E, 0x3F, 0x60, 0x7B, 0x7D ] as Array<uint8>),
+  encodeSet: Object.freeze(
+    [0x20, 0x22, 0x23, 0x3C, 0x3E, 0x3F, 0x60, 0x7B, 0x7D] as Array<uint8>,
+  ),
   spaceAsPlus: false,
 });
 
 const _URI_USERINFO_OPTIONS: _ResolvedOptions = Object.freeze({
-  encodeSet: Object.freeze([ 0x20, 0x22, 0x23, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D ] as Array<uint8>),
+  encodeSet: Object.freeze(
+    [
+      0x20,
+      0x22,
+      0x23,
+      0x2F,
+      0x3A,
+      0x3B,
+      0x3C,
+      0x3D,
+      0x3E,
+      0x3F,
+      0x40,
+      0x5B,
+      0x5C,
+      0x5D,
+      0x5E,
+      0x60,
+      0x7B,
+      0x7C,
+      0x7D,
+    ] as Array<uint8>,
+  ),
   spaceAsPlus: false,
 });
 
 const _URI_COMPONENT_OPTIONS: _ResolvedOptions = Object.freeze({
-  encodeSet: Object.freeze([ 0x20, 0x22, 0x23, 0x24, 0x26, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D ] as Array<uint8>),
+  encodeSet: Object.freeze(
+    [
+      0x20,
+      0x22,
+      0x23,
+      0x24,
+      0x26,
+      0x2B,
+      0x2C,
+      0x2F,
+      0x3A,
+      0x3B,
+      0x3C,
+      0x3D,
+      0x3E,
+      0x3F,
+      0x40,
+      0x5B,
+      0x5C,
+      0x5D,
+      0x5E,
+      0x60,
+      0x7B,
+      0x7C,
+      0x7D,
+    ] as Array<uint8>,
+  ),
   spaceAsPlus: false,
 });
 
 const _FORM_URLENCODED_OPTIONS: _ResolvedOptions = Object.freeze({
-  encodeSet: Object.freeze([ 0x20, 0x21, 0x22, 0x23, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D, 0x7E ] as Array<uint8>),
+  encodeSet: Object.freeze(
+    [
+      0x20,
+      0x21,
+      0x22,
+      0x23,
+      0x24,
+      0x26,
+      0x27,
+      0x28,
+      0x29,
+      0x2B,
+      0x2C,
+      0x2F,
+      0x3A,
+      0x3B,
+      0x3C,
+      0x3D,
+      0x3E,
+      0x3F,
+      0x40,
+      0x5B,
+      0x5C,
+      0x5D,
+      0x5E,
+      0x60,
+      0x7B,
+      0x7C,
+      0x7D,
+      0x7E,
+    ] as Array<uint8>,
+  ),
   spaceAsPlus: true,
 });
 
 /**
  * 文字列をバイト列にパーセント復号し、結果のバイト列を返却
- * 
+ *
  * {@link [URL Standard](https://url.spec.whatwg.org/#string-percent-decode)}の仕様に従った。
- * 
+ *
  * @param encoded パーセント符号化された文字列
  * @param options パーセント符号化の復号オプション
  * @returns バイト列
@@ -198,26 +281,22 @@ function _decode(encoded: string, options: _ResolvedOptions): Uint8Array {
 
     let byte: uint8;
     if (c === "%") {
-      const byteString = encoded.substring((i + 1), (i + 3));
+      const byteString = encoded.substring(i + 1, i + 3);
       if (hexRegExp.test(byteString)) {
         byte = Number.parseInt(byteString, 16) as uint8;
         i = i + 3;
-      }
-      else {
+      } else {
         byte = c.charCodeAt(0) as uint8;
         i = i + 1;
       }
-    }
-    else if (c === "+") {
+    } else if (c === "+") {
       if (options.spaceAsPlus === true) {
         byte = 0x20;
-      }
-      else {
-        byte = 0x2B;// c.charCodeAt(0) as uint8;
+      } else {
+        byte = 0x2B; // c.charCodeAt(0) as uint8;
       }
       i = i + 1;
-    }
-    else {
+    } else {
       byte = c.charCodeAt(0) as uint8;
       i = i + 1;
     }
@@ -234,23 +313,27 @@ function _decode(encoded: string, options: _ResolvedOptions): Uint8Array {
 
 /**
  * 符号化するとき、バイトが"%XX"の形にする対象か否かを返却
- * 
+ *
  * @param byte バイト
  * @param encodeSet 0x00-0x1F,0x25,0x7F-0xFF以外に"%XX"への変換対象とするバイトのセット
  * @returns バイトが"%XX"の形にする対象か否か
  */
-function _isByteIncludedInEncodeSet(byte: uint8, encodeSet: Readonly<Array<uint8>>): boolean {
-  return ((byte < 0x20) || (byte > 0x7E) || (byte === 0x25) || encodeSet.includes(byte));
+function _isByteIncludedInEncodeSet(
+  byte: uint8,
+  encodeSet: Readonly<Array<uint8>>,
+): boolean {
+  return ((byte < 0x20) || (byte > 0x7E) || (byte === 0x25) ||
+    encodeSet.includes(byte));
 }
 
 /**
  * （符号化するとき）バイトを"%XX"の形にし返却
- * 
+ *
  * @param bytes バイト
  * @returns "%XX"の形の文字列
  */
 function _formatByte(bytes: Uint8Array): string {
-  const byteStringArray = [ ...bytes ].map((byte) => {
+  const byteStringArray = [...bytes].map((byte) => {
     return "%" + byte.toString(16).toUpperCase().padStart(2, "0");
   });
   return byteStringArray.join("");
@@ -258,12 +341,12 @@ function _formatByte(bytes: Uint8Array): string {
 
 /**
  * バイト列を文字列にパーセント符号化し、結果の文字列を返却
- * 
+ *
  * {@link [URL Standard](https://url.spec.whatwg.org/)}の仕様に従い、"%"に後続する16進数は大文字で固定。
- * 
+ *
  * デフォルトでは全バイトを"%XX"の形に符号化する。
  * URLエンコードとして使用するには、適切なoptions.encodeSetを設定すること。
- * 
+ *
  * @param toEncode バイト列
  * @param options パーセント符号化の符号化オプション
  * @returns パーセント符号化された文字列
@@ -277,18 +360,16 @@ function _encode(toEncode: Uint8Array, options: _ResolvedOptions): string {
         if (options.spaceAsPlus === true) {
           encoded = encoded + _formatByte(Uint8Array.from(work)) + "+";
           work = [];
-        }
-        else {
+        } else {
           work.push(byte);
         }
-      }
-      else {
+      } else {
         work.push(byte as uint8);
       }
-    }
-    else {
+    } else {
       // 上記以外はbinary stringと同じ
-      encoded = encoded + _formatByte(Uint8Array.from(work)) + String.fromCharCode(byte);
+      encoded = encoded + _formatByte(Uint8Array.from(work)) +
+        String.fromCharCode(byte);
       work = [];
     }
   }
@@ -299,17 +380,21 @@ function _encode(toEncode: Uint8Array, options: _ResolvedOptions): string {
 /**
  * オプションを_ResolvedOptions型に変換する
  * 未設定項目はデフォルト値で埋める
- * 
+ *
  * @param options オプション
  * @returns 未設定項目を埋めたオプションの複製
  * @throws {RangeError} The `options.spaceAsPlus` is `true`, but the `options.encodeSet` was not contain `0x2B`.
  */
-function _resolveOptions(options: Percent.Options | _ResolvedOptions = {}): _ResolvedOptions {
+function _resolveOptions(
+  options: Percent.Options | _ResolvedOptions = {},
+): _ResolvedOptions {
   let encodeSet: Readonly<Array<uint8>>;
-  if (Array.isArray(options.encodeSet) && options.encodeSet.every((i) => Byte.isUint8(i))) {
-    encodeSet = Object.freeze([ ...(options.encodeSet as uint8[]) ]);
-  }
-  else {
+  if (
+    Array.isArray(options.encodeSet) &&
+    options.encodeSet.every((i) => Byte.isUint8(i))
+  ) {
+    encodeSet = Object.freeze([...(options.encodeSet as uint8[])]);
+  } else {
     encodeSet = _DEFAULT_OPTIONS.encodeSet;
   }
 
@@ -333,7 +418,7 @@ namespace Percent {
   // URLのパーセントデコードを実施したい場合は、戻り値をUTF-8デコードする必要がある
   /**
    * Decodes a Percent-encoded string into an `Uint8Array`.
-   * 
+   *
    * @param encoded The string to decode.
    * @param options The `Percent.Options` dictionary.
    * @returns An `Uint8Array` containing the decoded byte sequence.
@@ -343,7 +428,7 @@ namespace Percent {
    * ```javascript
    * Percent.decode("%61%62%00%FF");
    * // → Uint8Array[ 0x61, 0x62, 0x0, 0xFF ]
-   * 
+   *
    * Percent.decode("ab%00%FF");
    * // → Uint8Array[ 0x61, 0x62, 0x0, 0xFF ]
    * ```
@@ -358,7 +443,7 @@ namespace Percent {
   // （@exampleの例の2つ目だと"ab%00%C3%BF"にはならない）
   /**
    * Encodes the specified byte sequence into a string.
-   * 
+   *
    * @param toEncode The byte sequence to encode.
    * @param options The `Percent.Options` dictionary.
    * @returns A string containing the Percent-encoded characters.
@@ -367,7 +452,7 @@ namespace Percent {
    * ```javascript
    * Percent.encode(Uint8Array.of(0x61, 0x62, 0x0, 0xFF));
    * // → "%61%62%00%FF"
-   * 
+   *
    * Percent.encode(Uint8Array.of(0x61, 0x62, 0x0, 0xFF), Percent.Options.URI_COMPONENT);
    * // → "ab%00%FF"
    * ```
@@ -384,28 +469,28 @@ namespace Percent {
     /**
      * The byte set to be encoded except 0x00-0x1F, 0x25, 0x7F-0xFF.
      * The default is 0x20-0x24, 0x26-0x7E.
-     * 
+     *
      * The following restrictions apply:
      * - The `encodeSet` must not contain duplicate bytes.
-     * 
+     *
      * @see [https://url.spec.whatwg.org/#percent-encoded-bytes](https://url.spec.whatwg.org/#percent-encoded-bytes)
      */
-    encodeSet?: Readonly<Array<number>>,
-  
+    encodeSet?: Readonly<Array<number>>;
+
     /**
      * Whether to output 0x20 as `"+"`.
      * The default is `false`.
-     * 
+     *
      * The following restrictions apply:
      * - If `true`, `encodeSet` must contain `0x2B`.
      */
-    spaceAsPlus?: boolean,
+    spaceAsPlus?: boolean;
   };
 
   export namespace Options {
     /**
      * The options for the C0 controls percent-encode
-     * 
+     *
      * | field | value |
      * | :--- | :--- |
      * | `encodeSet` | `[]` |
@@ -415,7 +500,7 @@ namespace Percent {
 
     /**
      * The options for the URL fragment percent-encode
-     * 
+     *
      * | field | value |
      * | :--- | :--- |
      * | `encodeSet` | `[ 0x20, 0x22, 0x3C, 0x3E, 0x60 ]` |
@@ -425,7 +510,7 @@ namespace Percent {
 
     /**
      * The options for the URL query percent-encode
-     * 
+     *
      * | field | value |
      * | :--- | :--- |
      * | `encodeSet` | `[ 0x20, 0x22, 0x23, 0x3C, 0x3E ]` |
@@ -435,7 +520,7 @@ namespace Percent {
 
     /**
      * The options for the URL special-query percent-encode
-     * 
+     *
      * | field | value |
      * | :--- | :--- |
      * | `encodeSet` | `[ 0x20, 0x22, 0x23, 0x27, 0x3C, 0x3E ]` |
@@ -445,7 +530,7 @@ namespace Percent {
 
     /**
      * The options for the URL path percent-encode
-     * 
+     *
      * | field | value |
      * | :--- | :--- |
      * | `encodeSet` | `[ 0x20, 0x22, 0x23, 0x3C, 0x3E, 0x3F, 0x60, 0x7B, 0x7D ]` |
@@ -455,7 +540,7 @@ namespace Percent {
 
     /**
      * The options for the URL userinfo percent-encode
-     * 
+     *
      * | field | value |
      * | :--- | :--- |
      * | `encodeSet` | `[ 0x20, 0x22, 0x23, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D ]` |
@@ -465,7 +550,7 @@ namespace Percent {
 
     /**
      * The options for the URL component percent-encode
-     * 
+     *
      * | field | value |
      * | :--- | :--- |
      * | `encodeSet` | `[ 0x20, 0x22, 0x23, 0x24, 0x26, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D ]` |
@@ -475,7 +560,7 @@ namespace Percent {
 
     /**
      * The options for the application/x-www-form-urlencoded percent-encode
-     * 
+     *
      * | field | value |
      * | :--- | :--- |
      * | `encodeSet` | `[ 0x20, 0x21, 0x22, 0x23, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D, 0x7E ]` |
@@ -505,7 +590,7 @@ namespace Percent {
 
     /**
      * Decodes a Percent-encoded string into an `Uint8Array`.
-     * 
+     *
      * @param encoded The string to decode.
      * @returns An `Uint8Array` containing the decoded byte sequence.
      * @throws {TypeError} The `encoded` is not Percent-encoded string.
@@ -536,7 +621,7 @@ namespace Percent {
 
     /**
      * Encodes the specified byte sequence into a string.
-     * 
+     *
      * @param toEncode The byte sequence to encode.
      * @returns A string containing the Percent-encoded characters.
      */
@@ -545,10 +630,7 @@ namespace Percent {
     }
   }
   Object.freeze(Encoder);
-
 }
 Object.freeze(Percent);
 
-export {
-  Percent,
-};
+export { Percent };
