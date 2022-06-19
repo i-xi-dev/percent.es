@@ -3,7 +3,7 @@
 import {
   Byte,
   type uint8,
-} from "https://raw.githubusercontent.com/i-xi-dev/fundamental.es/main/src/byte.ts"; //TODO import_mapにうつす（今はdeno docで読めない）
+} from "https://raw.githubusercontent.com/i-xi-dev/fundamental.es/7.0.1/src/byte.ts"; //TODO import_mapにうつす（今はdeno docで読めない）
 
 /**
  * 未設定項目の存在しないオプション
