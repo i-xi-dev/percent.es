@@ -4,6 +4,7 @@ import {
   Byte,
   type byte,
 } from "https://raw.githubusercontent.com/i-xi-dev/byte.es/1.0.0/src/byte.ts"; //TODO import_mapにうつす（今はdeno docで読めない）
+import { BytesEncoding } from "https://raw.githubusercontent.com/i-xi-dev/bytes-encoding.es/1.0.0/src/bytes_encoding.ts";
 
 /**
  * 未設定項目の存在しないオプション
@@ -572,7 +573,7 @@ namespace Percent {
   /**
    * Percent decoder
    */
-  export class Decoder /* implements ByteEncoding.Decoder */ {
+  export class Decoder implements BytesEncoding.Decoder {
     /**
      * 未設定項目を埋めたオプション
      */
@@ -603,7 +604,7 @@ namespace Percent {
   /**
    * Percent encoder
    */
-  export class Encoder /* implements ByteEncoding.Encoder */ {
+  export class Encoder implements BytesEncoding.Encoder {
     /**
      * 未設定項目を埋めたオプション
      */
