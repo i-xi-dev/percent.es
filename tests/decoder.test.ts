@@ -4,8 +4,7 @@ import { Percent } from "../src/percent.ts";
 const utf8 = new TextEncoder();
 const utf8Bytes1 = utf8.encode("1\u{0} !~\u{7F}あ+");
 
-Deno.test("Percent.Decoder.prototype.decode", () => {
-  // Percent.Decoder()/decode
+Deno.test("Percent.Decoder.prototype.decode - Percent.Decoder()", () => {
   const decoder1 = new Percent.Decoder();
 
   const decoded11 = decoder1.decode("");
@@ -56,7 +55,9 @@ Deno.test("Percent.Decoder.prototype.decode", () => {
   const decoded57d = decoder1.decode("%fff");
   assertStrictEquals(JSON.stringify([...decoded57d]), "[255,102]");
 
-  // Percent.Decoder({spaceAsPlus:true})/decode
+});
+
+Deno.test("Percent.Decoder.prototype.decode - Percent.Decoder({spaceAsPlus:true})", () => {
   const decoder2 = new Percent.Decoder({spaceAsPlus:true});
 
   const decoded11b = decoder2.decode("");
@@ -84,7 +85,9 @@ Deno.test("Percent.Decoder.prototype.decode", () => {
     decoder2.decode("あ");
   }, TypeError, "decode error (1)");
 
-  // Percent.Decoder({encodeSet:[...]})/decode
+});
+
+Deno.test("Percent.Decoder.prototype.decode - Percent.Decoder({encodeSet:[...]})", () => {
   const decoder3 = new Percent.Decoder({encodeSet:[ 0x20, 0x21, 0x22, 0x23, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D, 0x7E ]});
 
   const decoded11c = decoder3.decode("");

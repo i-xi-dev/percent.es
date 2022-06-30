@@ -4,8 +4,7 @@ import { Percent } from "../src/percent.ts";
 const utf8 = new TextEncoder();
 const utf8Bytes1 = utf8.encode("1\u{0} !~\u{7F}あ+");
 
-Deno.test("Percent.decode", () => {
-  // decode(string)
+Deno.test("Percent.decode(string)", () => {
   const decodedA11 = Percent.decode("");
   assertStrictEquals(JSON.stringify([...decodedA11]), "[]");
 
@@ -54,7 +53,9 @@ Deno.test("Percent.decode", () => {
   const decodedA57d = Percent.decode("%fff");
   assertStrictEquals(JSON.stringify([...decodedA57d]), "[255,102]");
 
-  // decode(string, {spaceAsPlus:true})
+});
+
+Deno.test("Percent.decode(string, {spaceAsPlus:true})", () => {
   const decodedB11 = Percent.decode("", {spaceAsPlus:true});
   assertStrictEquals(JSON.stringify([...decodedB11]), "[]");
 
@@ -80,7 +81,9 @@ Deno.test("Percent.decode", () => {
     Percent.decode("あ", {spaceAsPlus:true});
   }, TypeError, "decode error (1)");
 
-  // decode(string, {encodeSet:[...]})
+});
+
+Deno.test("Percent.decode(string, {encodeSet:[...]})", () => {
   const opC = {encodeSet:[ 0x20, 0x21, 0x22, 0x23, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D, 0x7E ]};
 
   const decodedC11 = Percent.decode("", opC);
@@ -164,8 +167,7 @@ const x2 = Uint8Array.of(
 const x2b = Array.from(x2, (i)=>String.fromCharCode(i)).join("");
 const x2bUtf8 = new TextEncoder().encode(x2b);
 
-Deno.test("Percent.encode", () => {
-  // encode(Uint8Array)
+Deno.test("Percent.encode(Uint8Array)", () => {
   assertStrictEquals(Percent.encode(Uint8Array.of()), "");
   assertStrictEquals(Percent.encode(Uint8Array.of(3,2,1,0,0xFF,0xFE,0xFD,0xFC)), "%03%02%01%00%FF%FE%FD%FC");
   assertStrictEquals(Percent.encode(utf8Bytes1), "%31%00%20%21%7E%7F%E3%81%82%2B");
@@ -174,7 +176,9 @@ Deno.test("Percent.encode", () => {
   assertStrictEquals(Percent.encode(Uint8Array.of(0,32,65)), "%00%20%41");
   assertStrictEquals(Percent.encode(Uint8Array.of(255)), "%FF");
 
-  // encode(Uint8Array, {encodeSet:[]})
+});
+
+Deno.test("Percent.encode(Uint8Array, {encodeSet:[]})", () => {
   assertStrictEquals(Percent.encode(Uint8Array.of(), {encodeSet:[]}), "");
   assertStrictEquals(Percent.encode(Uint8Array.of(3,2,1,0,0xFF,0xFE,0xFD,0xFC), {encodeSet:[]}), "%03%02%01%00%FF%FE%FD%FC");
   assertStrictEquals(Percent.encode(utf8Bytes1, {encodeSet:[]}), "1%00 !~%7F%E3%81%82+");
@@ -183,13 +187,17 @@ Deno.test("Percent.encode", () => {
   assertStrictEquals(Percent.encode(Uint8Array.of(0,32,65), {encodeSet:[]}), "%00 A");
   assertStrictEquals(Percent.encode(Uint8Array.of(255), {encodeSet:[]}), "%FF");
 
-  // encode(Uint8Array, {encodeSet:[...]})
+});
+
+Deno.test("Percent.encode(Uint8Array, {encodeSet:[...]})", () => {
   const opD = {encodeSet:[ 0x20, 0x22, 0x3C, 0x3E, 0x60 ]};
 
   assertStrictEquals(Percent.encode(Uint8Array.of(), opD), "");
   assertStrictEquals(Percent.encode(utf8Bytes1, opD), "1%00%20!~%7F%E3%81%82+");
 
-  // encode(Uint8Array, {encodeSet:[...]})
+});
+
+Deno.test("Percent.encode(Uint8Array, {encodeSet:[...]})", () => {
   const opE = {encodeSet:[ 0x20, 0x22, 0x23, 0x24, 0x26, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D ]};
 
   assertStrictEquals(Percent.encode(Uint8Array.of(), opE), "");
@@ -219,7 +227,9 @@ Deno.test("Percent.encode", () => {
 
   assertStrictEquals(Percent.encode(x2bUtf8, opE), globalThis.encodeURIComponent(x2b));
 
-  // encode(Uint8Array, {encodeSet:[...],spaceAsPlus:true})
+});
+
+Deno.test("Percent.encode(Uint8Array, {encodeSet:[...],spaceAsPlus:true})", () => {
   const opF = {encodeSet:[ 0x20, 0x21, 0x22, 0x23, 0x24, 0x26, 0x27, 0x28, 0x29, 0x2B, 0x2C, 0x2F, 0x3A, 0x3B, 0x3C, 0x3D, 0x3E, 0x3F, 0x40, 0x5B, 0x5C, 0x5D, 0x5E, 0x60, 0x7B, 0x7C, 0x7D, 0x7E ],spaceAsPlus:true};
 
   assertStrictEquals(Percent.encode(Uint8Array.of(), opF), "");
@@ -236,7 +246,9 @@ Deno.test("Percent.encode", () => {
   const e = u.search.replace("?p1=", "");
   assertStrictEquals(Percent.encode(x2bUtf8, opF), e);
 
-  // encode(Uint8Array, {encodeSet:[],spaceAsPlus:true})
+});
+
+Deno.test("Percent.encode(Uint8Array, {encodeSet:[],spaceAsPlus:true})", () => {
   const opG = {encodeSet:[],spaceAsPlus:true};
 
   assertThrows(() => {
