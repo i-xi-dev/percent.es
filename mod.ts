@@ -1,3 +1,1 @@
-//
-
-export { Percent } from "./src/percent.ts";
+export * from "./src/percent.ts";
