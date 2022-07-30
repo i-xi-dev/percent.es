@@ -23,20 +23,20 @@ await build({
     keywords: [],
     repository: {
       type: "git",
-      url: "git+https://github.com/i-xi-dev/percent.es.git"
+      url: "git+https://github.com/i-xi-dev/percent.es.git",
     },
     bugs: {
-      url: "https://github.com/i-xi-dev/percent.es/issues"
+      url: "https://github.com/i-xi-dev/percent.es/issues",
     },
     publishConfig: {
-      access: "public"
+      access: "public",
     },
     files: [
       "esm",
-      "types"
+      "types",
     ],
   },
-  importMap: "./import_map.json"
+  importMap: "./import_map.json",
 });
 
 Deno.copyFileSync("LICENSE", "npm/LICENSE");
