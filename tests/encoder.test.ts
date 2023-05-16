@@ -1,4 +1,4 @@
-import { assertStrictEquals, assertThrows } from "std/testing/asserts";
+import { assertStrictEquals, assertThrows } from "./deps.ts";
 import { Percent } from "../mod.ts";
 
 const utf8 = new TextEncoder();

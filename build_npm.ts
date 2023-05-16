@@ -15,7 +15,7 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/percent",
-    version: "4.0.15",
+    version: "4.0.16",
     description: "This is not for direct usage.",
     license: "MIT",
     author: "i-xi-dev",
@@ -36,7 +36,6 @@ await build({
       "types",
     ],
   },
-  importMap: "./import_map.json",
 
   //
   typeCheck: false, // 落ちるようになった

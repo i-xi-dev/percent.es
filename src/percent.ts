@@ -1,5 +1,4 @@
-import { Uint8, type uint8 } from "i-xi-dev/int.es";
-import { BytesEncoding } from "i-xi-dev/bytes-encoding.es";
+import { BytesEncoding, type uint8, Uint8 } from "../deps.ts";
 
 /**
  * 未設定項目の存在しないオプション
