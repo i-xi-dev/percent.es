@@ -1,4 +1,4 @@
-import { BytesEncoding, type uint8, Uint8 } from "../deps.ts";
+import { BytesEncoding, Uint8, type uint8 } from "../deps.ts";
 
 /**
  * 未設定項目の存在しないオプション
