@@ -1,4 +1,4 @@
-import { BytesEncoding, Uint8, type uint8 } from "../deps.ts";
+import { BytesEncoding, Uint8 } from "../deps.ts";
 
 /**
  * 未設定項目の存在しないオプション
@@ -7,7 +7,7 @@ type _ResolvedOptions = {
   /**
    * 0x00-0x1F,0x25,0x7F-0xFF以外に"%XX"への変換対象とするバイトのセット
    */
-  encodeSet: Readonly<Array<uint8>>;
+  encodeSet: Readonly<Array<Uint8>>;
 
   /**
    * 復号時:
@@ -123,35 +123,35 @@ const _DEFAULT_OPTIONS: _ResolvedOptions = Object.freeze({
     0x7C,
     0x7D,
     0x7E,
-  ] as Array<uint8>),
+  ] as Array<Uint8>),
   spaceAsPlus: false,
 });
 
 const _MIN_OPTIONS: _ResolvedOptions = Object.freeze({
-  encodeSet: Object.freeze([] as Array<uint8>),
+  encodeSet: Object.freeze([] as Array<Uint8>),
   spaceAsPlus: false,
 });
 
 const _URI_FRAGMENT_OPTIONS: _ResolvedOptions = Object.freeze({
-  encodeSet: Object.freeze([0x20, 0x22, 0x3C, 0x3E, 0x60] as Array<uint8>),
+  encodeSet: Object.freeze([0x20, 0x22, 0x3C, 0x3E, 0x60] as Array<Uint8>),
   spaceAsPlus: false,
 });
 
 const _URI_QUERY_OPTIONS: _ResolvedOptions = Object.freeze({
-  encodeSet: Object.freeze([0x20, 0x22, 0x23, 0x3C, 0x3E] as Array<uint8>),
+  encodeSet: Object.freeze([0x20, 0x22, 0x23, 0x3C, 0x3E] as Array<Uint8>),
   spaceAsPlus: false,
 });
 
 const _URI_SPECIAL_QUERY_OPTIONS: _ResolvedOptions = Object.freeze({
   encodeSet: Object.freeze(
-    [0x20, 0x22, 0x23, 0x27, 0x3C, 0x3E] as Array<uint8>,
+    [0x20, 0x22, 0x23, 0x27, 0x3C, 0x3E] as Array<Uint8>,
   ),
   spaceAsPlus: false,
 });
 
 const _URI_PATH_OPTIONS: _ResolvedOptions = Object.freeze({
   encodeSet: Object.freeze(
-    [0x20, 0x22, 0x23, 0x3C, 0x3E, 0x3F, 0x60, 0x7B, 0x7D] as Array<uint8>,
+    [0x20, 0x22, 0x23, 0x3C, 0x3E, 0x3F, 0x60, 0x7B, 0x7D] as Array<Uint8>,
   ),
   spaceAsPlus: false,
 });
@@ -178,7 +178,7 @@ const _URI_USERINFO_OPTIONS: _ResolvedOptions = Object.freeze({
       0x7B,
       0x7C,
       0x7D,
-    ] as Array<uint8>,
+    ] as Array<Uint8>,
   ),
   spaceAsPlus: false,
 });
@@ -209,7 +209,7 @@ const _URI_COMPONENT_OPTIONS: _ResolvedOptions = Object.freeze({
       0x7B,
       0x7C,
       0x7D,
-    ] as Array<uint8>,
+    ] as Array<Uint8>,
   ),
   spaceAsPlus: false,
 });
@@ -245,7 +245,7 @@ const _FORM_URLENCODED_OPTIONS: _ResolvedOptions = Object.freeze({
       0x7C,
       0x7D,
       0x7E,
-    ] as Array<uint8>,
+    ] as Array<Uint8>,
   ),
   spaceAsPlus: true,
 });
@@ -273,25 +273,25 @@ function _decode(encoded: string, options: _ResolvedOptions): Uint8Array {
   while (i < encoded.length) {
     const c = encoded.charAt(i);
 
-    let byte: uint8;
+    let byte: Uint8;
     if (c === "%") {
       const byteString = encoded.substring(i + 1, i + 3);
       if (hexRegExp.test(byteString)) {
-        byte = Number.parseInt(byteString, 16) as uint8;
+        byte = Number.parseInt(byteString, 16) as Uint8;
         i = i + 3;
       } else {
-        byte = c.charCodeAt(0) as uint8;
+        byte = c.charCodeAt(0) as Uint8;
         i = i + 1;
       }
     } else if (c === "+") {
       if (options.spaceAsPlus === true) {
         byte = 0x20;
       } else {
-        byte = 0x2B; // c.charCodeAt(0) as uint8;
+        byte = 0x2B; // c.charCodeAt(0) as Uint8;
       }
       i = i + 1;
     } else {
-      byte = c.charCodeAt(0) as uint8;
+      byte = c.charCodeAt(0) as Uint8;
       i = i + 1;
     }
 
@@ -313,8 +313,8 @@ function _decode(encoded: string, options: _ResolvedOptions): Uint8Array {
  * @returns バイトが"%XX"の形にする対象か否か
  */
 function _isByteIncludedInEncodeSet(
-  byte: uint8,
-  encodeSet: Readonly<Array<uint8>>,
+  byte: Uint8,
+  encodeSet: Readonly<Array<Uint8>>,
 ): boolean {
   return ((byte < 0x20) || (byte > 0x7E) || (byte === 0x25) ||
     encodeSet.includes(byte));
@@ -346,10 +346,10 @@ function _formatByte(bytes: Uint8Array): string {
  * @returns パーセント符号化された文字列
  */
 function _encode(toEncode: Uint8Array, options: _ResolvedOptions): string {
-  let work: Array<uint8> = [];
+  let work: Array<Uint8> = [];
   let encoded = "";
   for (const byte of toEncode) {
-    if (_isByteIncludedInEncodeSet(byte as uint8, options.encodeSet)) {
+    if (_isByteIncludedInEncodeSet(byte as Uint8, options.encodeSet)) {
       if (byte === 0x20) {
         if (options.spaceAsPlus === true) {
           encoded = encoded + _formatByte(Uint8Array.from(work)) + "+";
@@ -358,7 +358,7 @@ function _encode(toEncode: Uint8Array, options: _ResolvedOptions): string {
           work.push(byte);
         }
       } else {
-        work.push(byte as uint8);
+        work.push(byte as Uint8);
       }
     } else {
       // 上記以外はbinary stringと同じ
@@ -382,12 +382,12 @@ function _encode(toEncode: Uint8Array, options: _ResolvedOptions): string {
 function _resolveOptions(
   options: Percent.Options | _ResolvedOptions = {},
 ): _ResolvedOptions {
-  let encodeSet: Readonly<Array<uint8>>;
+  let encodeSet: Readonly<Array<Uint8>>;
   if (
     Array.isArray(options.encodeSet) &&
     options.encodeSet.every((i) => Uint8.isUint8(i))
   ) {
-    encodeSet = Object.freeze([...(options.encodeSet as uint8[])]);
+    encodeSet = Object.freeze([...(options.encodeSet as Uint8[])]);
   } else {
     encodeSet = _DEFAULT_OPTIONS.encodeSet;
   }
