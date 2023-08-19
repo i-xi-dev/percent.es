@@ -15,7 +15,7 @@ await build({
   rootTestDir: "./tests",
   package: {
     name: "@i-xi-dev/percent",
-    version: "4.0.21",
+    version: "4.0.22",
     description: "This is not for direct usage.",
     license: "MIT",
     author: "i-xi-dev",
