@@ -407,7 +407,7 @@ function _resolveOptions(
   });
 }
 
-namespace Percent {
+export namespace Percent {
   // デコード結果が文字符号化した結果のバイト列かどうかには関知しない
   // URLのパーセントデコードを実施したい場合は、戻り値をUTF-8デコードする必要がある
   /**
@@ -625,6 +625,3 @@ namespace Percent {
   }
   Object.freeze(Encoder);
 }
-Object.freeze(Percent);
-
-export { Percent };
